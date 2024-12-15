@@ -8,9 +8,14 @@ interface NetworkDetailsProps {
   details: string;
 }
 
+interface CommandData {
+  description?: string;
+  command?: string;
+}
+
 const NetworkDetails: React.FC<NetworkDetailsProps> = ({ name, description, details }) => {
   const [selectedService, setSelectedService] = useState<string>('');
-  const [serviceData, setServiceData] = useState<any>(null);
+  const [serviceData, setServiceData] = useState<Record<string, CommandData[]> | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -20,23 +25,37 @@ const NetworkDetails: React.FC<NetworkDetailsProps> = ({ name, description, deta
     setIsLoading(true);
     setError(null);
 
-    const networkPath = details.includes('mainnet') ? 'mainnet' : 'testnet';
-    const networkName = details.split('/').pop() || '';
-    const url = `https://snapshots.coinhunterstr.com/site/${networkPath}/${networkName}/${service}.json`;
-
     try {
-      const response = await fetch(url);
+      const networkPath = details.includes('mainnet') ? 'mainnet' : 'testnet';
+      const networkName = details.split('/').pop()?.toLowerCase() || '';
       
-      if (!response.ok) {
-        throw new Error('Server response was not ok');
+      if (!networkName) {
+        throw new Error('Invalid network name');
       }
-      
+
+      const url = `https://snapshots.coinhunterstr.com/site/${networkPath}/${networkName}/${service}.json`;
+      console.log('Fetching from URL:', url);
+
+      const response = await fetch(url, {
+        method: 'GET',
+        headers: {
+          'Accept': 'application/json',
+        },
+        mode: 'cors',
+        cache: 'no-cache',
+      });
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+
       const data = await response.json();
-      console.log('Fetched data:', data);
+      console.log('Received data:', data);
       setServiceData(data);
-    } catch (error) {
-      console.error('Error:', error);
-      setError('Failed to load data. Please try again.');
+    } catch (error: any) {
+      console.error('Fetch error:', error);
+      setError(error.message || 'Failed to load data');
+      setServiceData(null);
     } finally {
       setIsLoading(false);
     }
@@ -53,25 +72,38 @@ const NetworkDetails: React.FC<NetworkDetailsProps> = ({ name, description, deta
   };
 
   const renderServiceData = () => {
-    if (isLoading) return <div>Loading...</div>;
-    if (error) return <div className={styles.error}>{error}</div>;
-    if (!serviceData) return null;
+    if (isLoading) {
+      return <div className={styles.loading}>Loading...</div>;
+    }
+
+    if (error) {
+      return <div className={styles.error}>{error}</div>;
+    }
+
+    if (!serviceData) {
+      return null;
+    }
 
     return (
-      <div className={styles.section}>
-        <h3>{selectedService}</h3>
-        {Object.entries(serviceData).map(([title, commands]: [string, any]) => (
-          <div key={title} className={styles.command}>
-            <h4>{title}</h4>
+      <div className={styles.serviceContent}>
+        {Object.entries(serviceData).map(([section, commands]) => (
+          <div key={section} className={styles.section}>
+            <h3>{section}</h3>
             {Array.isArray(commands) ? (
-              commands.map((cmd: any, index: number) => (
-                <div key={index}>
-                  <p>{cmd.description}</p>
-                  <pre><code>{cmd.command}</code></pre>
+              commands.map((cmd, index) => (
+                <div key={index} className={styles.command}>
+                  {cmd.description && <p>{cmd.description}</p>}
+                  {cmd.command && (
+                    <pre>
+                      <code>{cmd.command}</code>
+                    </pre>
+                  )}
                 </div>
               ))
             ) : (
-              <pre><code>{JSON.stringify(commands, null, 2)}</code></pre>
+              <pre>
+                <code>{JSON.stringify(commands, null, 2)}</code>
+              </pre>
             )}
           </div>
         ))}
