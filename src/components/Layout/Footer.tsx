@@ -12,7 +12,7 @@ const Footer: React.FC = () => {
             <i className="fas fa-globe"></i>
           </a>
           <a href="https://x.com/CoinHuntersTR" target="_blank" rel="noopener noreferrer">
-            <i className="fab fa-x-twitter"></i>
+            <i className="fab fa-twitter"></i>
           </a>
           <a href="https://www.youtube.com/@CoinHuntersTR" target="_blank" rel="noopener noreferrer">
             <i className="fab fa-youtube"></i>
