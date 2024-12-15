@@ -1,5 +1,8 @@
 
 import React from 'react';
+
+import Footer from './components/Layout/Footer';
+
 import Header from './components/Layout/Header';
 import ScrollToTop from './components/ScrollToTop/ScrollToTop';
 import ThemeToggle from './components/ThemeToggle/ThemeToggle';
@@ -14,7 +17,7 @@ export default function App() {
         <p>Modern web uygulamanız hazır!</p>
       </main>
       <ScrollToTop />
-      <ThemeToggle />
+      <Footer />
     </div>
   );
 }
