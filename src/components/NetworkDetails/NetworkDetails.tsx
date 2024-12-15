@@ -8,21 +8,21 @@ interface NetworkDetailsProps {
   details: string;
 }
 
-interface CommandItem {
+interface Command {
   description: string;
   command: string;
 }
 
 interface CommandCategory {
-  [key: string]: CommandItem;
+  [key: string]: Command;
 }
 
-interface Commands {
+interface CommandData {
   [category: string]: CommandCategory;
 }
 
 const NetworkDetails: React.FC<NetworkDetailsProps> = ({ name, description }) => {
-  const [commands, setCommands] = useState<Commands | null>(null);
+  const [commands, setCommands] = useState<CommandData | null>(null);
   const [selectedService, setSelectedService] = useState<string>('');
   const [error, setError] = useState<string | null>(null);
 
@@ -32,15 +32,19 @@ const NetworkDetails: React.FC<NetworkDetailsProps> = ({ name, description }) =>
     if (selectedService === 'usefulcommands') {
       const loadCommands = async () => {
         try {
-          const response = await fetch('/Pasted--key-management-add-new-key-description-Add-a-new-key-comman-1734298136519.txt');
+          const response = await fetch('./Pasted--key-management-add-new-key-description-Add-a-new-key-comman-1734298136519.txt');
+          if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+          }
           const text = await response.text();
-          const jsonData = JSON.parse(text.trim());
+          console.log('Raw text:', text); // Debug için
+          const jsonData = JSON.parse(text);
+          console.log('Parsed data:', jsonData); // Debug için
           setCommands(jsonData);
           setError(null);
-          console.log('Commands loaded:', jsonData);
         } catch (err) {
           console.error('Error loading commands:', err);
-          setError('Failed to load commands');
+          setError('Failed to load commands. Please try again.');
           setCommands(null);
         }
       };
@@ -77,7 +81,9 @@ const NetworkDetails: React.FC<NetworkDetailsProps> = ({ name, description }) =>
                   {Object.entries(items).map(([key, item]) => (
                     <div key={key} className={styles.command}>
                       <p className={styles.description}>{item.description}</p>
-                      <pre className={styles.code}><code>{item.command}</code></pre>
+                      <pre className={styles.code}>
+                        <code>{item.command}</code>
+                      </pre>
                     </div>
                   ))}
                 </div>
