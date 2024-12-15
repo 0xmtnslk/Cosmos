@@ -77,6 +77,18 @@ export default function App() {
       <Header />
       <ThemeToggle />
       <main className="main">
+        <section className="banner-section">
+          <img 
+            src="https://pbs.twimg.com/profile_banners/1408025751463600128/1716412022/1500x500" 
+            alt="CoinHunters Banner" 
+            className="banner-image"
+          />
+          <div className="about-section">
+            <h2>Who are we ?</h2>
+            <p>We are one of the leading mentors and content creators in Turkey's blockchain technology and cryptocurrency market. We are creating contents related to blockchain technology, defi, web3, testnets, pre-sales and all cryptocurrency analystics for the Turkish community. Beside content creation, they are active node runner on Dymension, Nibiru mainnets and testnets such as CrossFi, Warden, Avail etc. We also have an organization for VC investments and launchpad called HuntersArena. We invest in important projects and startups together with our community.</p>
+            <p className="contact-text">If you have any questions, please feel free to contact us</p>
+          </div>
+        </section>
         <section className="network-section mainnet">
           <h2>Mainnet</h2>
           <div className="network-content">
