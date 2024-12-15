@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import styles from './NetworkDetails.module.css';
 
@@ -7,112 +8,29 @@ interface NetworkDetailsProps {
   details: string;
 }
 
-interface CommandData {
-  description?: string;
-  command?: string;
-}
-
-const NetworkDetails: React.FC<NetworkDetailsProps> = ({ name, description, details }) => {
+const NetworkDetails: React.FC<NetworkDetailsProps> = ({ name, description }) => {
+  const [commands, setCommands] = useState<any>(null);
   const [selectedService, setSelectedService] = useState<string>('');
-  const [serviceData, setServiceData] = useState<Record<string, CommandData[]> | null>(null);
-  const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
   const services = ['installation', 'snapshots', 'upgrade', 'peers', 'usefulcommands', 'tools'];
 
-  const fetchData = async (service: string) => {
-    setIsLoading(true);
-    setError(null);
-
-    try {
-      const networkPath = details.includes('mainnet') ? 'mainnet' : 'testnet';
-      const networkName = details.split('/').pop()?.toLowerCase() || '';
-      
-      if (!networkName) {
-        throw new Error('Invalid network name');
-      }
-
-      const url = `https://snapshots.coinhunterstr.com/site/${networkPath}/${networkName}/${service}.json`;
-      console.log('Fetching from URL:', url);
-
-      const response = await fetch(url, {
-        method: 'GET',
-        headers: {
-          'Accept': 'application/json',
-          'Content-Type': 'application/json',
-          'Cache-Control': 'no-cache',
-          'Pragma': 'no-cache'
-        },
-        mode: 'cors',
-        cache: 'no-cache',
-        credentials: 'omit'
-      });
-
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
-      }
-
-      const text = await response.text();
-      console.log('Raw response:', text);
-
-      try {
-        const data = JSON.parse(text);
-        console.log('Parsed data:', data);
-        setServiceData(data);
-      } catch (parseError) {
-        console.error('JSON Parse error:', parseError);
-        throw new Error('Invalid JSON response');
-      }
-    } catch (error: any) {
-      console.error('Fetch error:', error);
-      setError(error.message || 'Failed to load data');
-      setServiceData(null);
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
   useEffect(() => {
-    if (selectedService) {
-      fetchData(selectedService);
+    if (selectedService === 'usefulcommands') {
+      fetch('/Pasted--commands-key-management-add-new-key-description-Add-a-n-1734297568095.txt')
+        .then(response => response.text())
+        .then(text => {
+          try {
+            const data = JSON.parse(text);
+            setCommands(data);
+            setError(null);
+          } catch (err) {
+            setError('JSON parsing error');
+          }
+        })
+        .catch(() => setError('Failed to load commands'));
     }
-  }, [selectedService, details]);
-
-  const handleServiceClick = (service: string) => {
-    setSelectedService(service);
-  };
-
-  const renderServiceData = () => {
-    if (isLoading) {
-      return <div className={styles.loading}>Loading...</div>;
-    }
-
-    if (error) {
-      return <div className={styles.error}>{error}</div>;
-    }
-
-    if (!serviceData || !serviceData.commands) {
-      return null;
-    }
-
-    return (
-      <div className={styles.serviceContent}>
-        {Object.entries(serviceData.commands).map(([category, categoryCommands]) => (
-          <div key={category} className={styles.section}>
-            <h3>{category.replace(/_/g, ' ').toUpperCase()}</h3>
-            {Object.entries(categoryCommands).map(([cmdKey, cmdData]) => (
-              <div key={cmdKey} className={styles.command}>
-                <p>{cmdData.description}</p>
-                <pre>
-                  <code>{cmdData.command}</code>
-                </pre>
-              </div>
-            ))}
-          </div>
-        ))}
-      </div>
-    );
-  };
+  }, [selectedService]);
 
   return (
     <div className={styles.container}>
@@ -123,7 +41,7 @@ const NetworkDetails: React.FC<NetworkDetailsProps> = ({ name, description, deta
         {services.map(service => (
           <button
             key={service}
-            onClick={() => handleServiceClick(service)}
+            onClick={() => setSelectedService(service)}
             className={`${styles.serviceButton} ${selectedService === service ? styles.active : ''}`}
           >
             {service.charAt(0).toUpperCase() + service.slice(1)}
@@ -132,7 +50,22 @@ const NetworkDetails: React.FC<NetworkDetailsProps> = ({ name, description, deta
       </div>
 
       <div className={styles.content}>
-        {renderServiceData()}
+        {error && <div className={styles.error}>{error}</div>}
+        {selectedService === 'usefulcommands' && commands && (
+          <div className={styles.commands}>
+            {Object.entries(commands.commands).map(([category, items]: [string, any]) => (
+              <div key={category} className={styles.category}>
+                <h3>{category.replace(/_/g, ' ').toUpperCase()}</h3>
+                {Object.entries(items).map(([key, item]: [string, any]) => (
+                  <div key={key} className={styles.command}>
+                    <p>{item.description}</p>
+                    <pre><code>{item.command}</code></pre>
+                  </div>
+                ))}
+              </div>
+            ))}
+          </div>
+        )}
       </div>
     </div>
   );
