@@ -22,23 +22,29 @@ export default function App() {
 
   const fetchNodes = async () => {
     try {
-      const timestamp = new Date().getTime();
-      const response = await fetch(`https://snapshots.coinhunterstr.com/network.json?t=${timestamp}`);
-      if (!response.ok) {
-        throw new Error('Network response was not ok');
-      }
-      const data = await response.json();
-      
-      // Sort nodes alphabetically by name
-      const sortedData = {
-        mainnet: [...data.mainnet].sort((a, b) => a.name.localeCompare(b.name)),
-        testnet: [...data.testnet].sort((a, b) => a.name.localeCompare(b.name))
+      const data = {
+        mainnet: [
+          {
+            name: "Sui Node",
+            pic: "https://example.com/sui-logo.png",
+            details: "https://nodes.coinhunterstr.com/sui",
+            status: "ongoing"
+          }
+        ],
+        testnet: [
+          {
+            name: "Massa Node",
+            pic: "https://example.com/massa-logo.png",
+            details: "https://nodes.coinhunterstr.com/massa",
+            status: "finish"
+          }
+        ]
       };
       
-      console.log('Fetched and sorted data:', sortedData);
-      setNodes(sortedData);
+      setNodes(data);
+      console.log('Data loaded:', data);
     } catch (error) {
-      console.error('Error fetching nodes:', error);
+      console.error('Error:', error);
     }
   };
 

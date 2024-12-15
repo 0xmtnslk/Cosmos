@@ -96,6 +96,29 @@
   height: 10px;
   border-radius: 50%;
   margin-left: auto;
+}
+
+.status-indicator.ongoing {
+  background-color: #4CAF50;
+  animation: blink 1s infinite;
+}
+
+.status-indicator.finish {
+  background-color: #f44336;
+  animation: blink 1s infinite;
+}
+
+@keyframes blink {
+  0% { opacity: 1; }
+  50% { opacity: 0.4; }
+  100% { opacity: 1; }
+}
+
+.status-indicator {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  margin-left: auto;
   animation: pulse 1.5s infinite;
 }
 
