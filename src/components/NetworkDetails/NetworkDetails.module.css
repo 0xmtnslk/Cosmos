@@ -81,6 +81,29 @@
   color: var(--text-color);
 }
 
+.copyButton {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  padding: 5px 10px;
+  background: var(--primary-color);
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 12px;
+  opacity: 0.8;
+  transition: opacity 0.2s;
+}
+
+.copyButton:hover {
+  opacity: 1;
+}
+
+.command {
+  position: relative;
+}
+
 .error {
   color: #ff4444;
   padding: 10px;

@@ -260,6 +260,12 @@ const NetworkDetails: React.FC<NetworkDetailsProps> = ({ name, description }) =>
                       <p className={styles.description}>{item.description}</p>
                       <pre className={styles.code}>
                         <code>{item.command}</code>
+                        <button 
+                          className={styles.copyButton}
+                          onClick={() => navigator.clipboard.writeText(item.command)}
+                        >
+                          Copy
+                        </button>
                       </pre>
                     </div>
                   ))}
