@@ -49,9 +49,18 @@ const NetworkDetails: React.FC<NetworkDetailsProps> = ({ name, description, deta
         throw new Error(`HTTP error! status: ${response.status}`);
       }
 
-      const data = await response.json();
+      const text = await response.text();
+      console.log('Raw response:', text);
+      
+      try {
+        const data = JSON.parse(text);
+        console.log('Parsed data:', data);
       console.log('Received data:', data);
       setServiceData(data);
+      } catch (parseError) {
+        console.error('JSON Parse error:', parseError);
+        throw new Error(`JSON ayrıştırma hatası: ${parseError.message}`);
+      }
     } catch (error: any) {
       console.error('Fetch error:', error);
       setError(error.message || 'Failed to load data');
