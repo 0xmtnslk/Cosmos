@@ -236,16 +236,55 @@ const NetworkDetails: React.FC<NetworkDetailsProps> = ({ name, description }) =>
       <h1>{name}</h1>
       <p className={styles.description}>{description}</p>
       
+      <h2>Tools</h2>
       <div className={styles.services}>
-        {services.map(service => (
-          <button
-            key={service}
-            onClick={() => setSelectedService(service)}
-            className={`${styles.serviceButton} ${selectedService === service ? styles.active : ''}`}
-          >
-            {service.charAt(0).toUpperCase() + service.slice(1)}
-          </button>
-        ))}
+        <button
+          onClick={() => setSelectedService('snapshots')}
+          className={`${styles.serviceButton} ${selectedService === 'snapshots' ? styles.active : ''}`}
+        >
+          <h3>Snapshots</h3>
+          <p>Network snapshots and synchronization data</p>
+        </button>
+        
+        <button
+          onClick={() => setSelectedService('peers')}
+          className={`${styles.serviceButton} ${selectedService === 'peers' ? styles.active : ''}`}
+        >
+          <h3>Live Peers</h3>
+          <p>Active peers are updated hourly</p>
+        </button>
+        
+        <button
+          onClick={() => setSelectedService('faucet')}
+          className={`${styles.serviceButton} ${selectedService === 'faucet' ? styles.active : ''}`}
+        >
+          <h3>Faucet</h3>
+          <p>Get testnet tokens</p>
+        </button>
+        
+        <button
+          onClick={() => setSelectedService('rpc')}
+          className={`${styles.serviceButton} ${selectedService === 'rpc' ? styles.active : ''}`}
+        >
+          <h3>Public RPC</h3>
+          <p>Access network endpoints</p>
+        </button>
+        
+        <button
+          onClick={() => setSelectedService('addrbook')}
+          className={`${styles.serviceButton} ${selectedService === 'addrbook' ? styles.active : ''}`}
+        >
+          <h3>Addrbook</h3>
+          <p>Active peers are updated hourly</p>
+        </button>
+        
+        <button
+          onClick={() => setSelectedService('usefulcommands')}
+          className={`${styles.serviceButton} ${selectedService === 'usefulcommands' ? styles.active : ''}`}
+        >
+          <h3>Useful Tools</h3>
+          <p>Additional network utilities</p>
+        </button>
       </div>
 
       <div className={styles.content}>
