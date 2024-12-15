@@ -24,15 +24,29 @@
   color: var(--text-color);
   text-decoration: none;
   transition: color 0.3s ease;
+  font-size: 1.5rem;
+  padding: 0.5rem;
 }
 
 .socialLinks a:hover {
   color: var(--primary-color);
+  transform: translateY(-2px);
 }
 
 .copyright {
   color: var(--text-color);
   font-size: 0.9rem;
+  text-align: center;
+  width: 100%;
+  order: 2;
+}
+
+.themeToggleContainer {
+  order: 3;
+}
+
+.socialLinks {
+  order: 1;
 }
 
 @media (max-width: 768px) {
