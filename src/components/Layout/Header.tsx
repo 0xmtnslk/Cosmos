@@ -9,6 +9,13 @@ const Header: React.FC = () => {
     setIsMenuOpen(!isMenuOpen);
   };
 
+  const scrollToSection = (sectionId: string) => {
+    const element = document.querySelector(`.${sectionId}`);
+    if (element) {
+      element.scrollIntoView({ behavior: 'smooth' });
+    }
+  };
+
   return (
     <header className={styles.header}>
       <div className={styles.logoContainer}>
@@ -22,6 +29,14 @@ const Header: React.FC = () => {
       <button onClick={toggleMenu} className={styles.menuButton}>
         ☰
       </button>
+      <div className={styles.navButtons}>
+        <button className={styles.navButton} onClick={() => scrollToSection('mainnet')}>
+          Mainnet
+        </button>
+        <button className={styles.navButton} onClick={() => scrollToSection('testnet')}>
+          Testnet
+        </button>
+      </div>
       <nav className={`${styles.nav} ${isMenuOpen ? styles.active : ''}`}>
         <ul>
           <li><a href="/" style={{ color: 'var(--text-color)' }}>Home</a></li>

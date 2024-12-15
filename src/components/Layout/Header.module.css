@@ -6,6 +6,30 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+}
+
+.navButtons {
+  display: flex;
+  gap: 1rem;
+  margin-right: 2rem;
+}
+
+.navButton {
+  padding: 0.5rem 1rem;
+  border: 1px solid var(--primary-color);
+  border-radius: 4px;
+  color: var(--text-color);
+  background: transparent;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.navButton:hover {
+  background: var(--primary-color);
+  color: white;
 }
 
 .menuButton {
