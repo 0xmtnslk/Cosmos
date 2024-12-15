@@ -19,7 +19,9 @@ const NetworkDetails: React.FC<NetworkDetailsProps> = ({ name, description, deta
       const baseUrl = 'https://snapshots.coinhunterstr.com/site';
       const networkPath = details.includes('mainnet') ? 'mainnet' : 'testnet';
       const networkName = details.split('/').pop();
-      const response = await fetch(`${baseUrl}/${networkPath}/${networkName}/${service}.json`);
+      const url = `${baseUrl}/${networkPath}/${networkName}/${service}.json`;
+      console.log('Fetching from:', url);
+      const response = await fetch(url);
       
       if (!response.ok) throw new Error('Network response was not ok');
       const data = await response.json();
@@ -33,6 +35,22 @@ const NetworkDetails: React.FC<NetworkDetailsProps> = ({ name, description, deta
   const handleServiceClick = (service: string) => {
     setSelectedService(service);
     fetchServiceData(service);
+  };
+
+  const renderUsefulCommands = (data: any) => {
+    return Object.entries(data).map(([section, commands]: [string, any]) => (
+      <div key={section} className={styles.commandSection}>
+        <h4>{section}</h4>
+        {Array.isArray(commands) && commands.map((command: any, index: number) => (
+          <div key={index} className={styles.commandItem}>
+            <p className={styles.description}>{command.description}</p>
+            <pre className={styles.command}>
+              <code>{command.command}</code>
+            </pre>
+          </div>
+        ))}
+      </div>
+    ));
   };
 
   return (
@@ -61,19 +79,7 @@ const NetworkDetails: React.FC<NetworkDetailsProps> = ({ name, description, deta
             <h3>{selectedService.charAt(0).toUpperCase() + selectedService.slice(1)}</h3>
             <div className={styles.contentBox}>
               {selectedService === 'usefulcommands' ? (
-                Object.entries(serviceData).map(([section, commands]: [string, any]) => (
-                  <div key={section} className={styles.commandSection}>
-                    <h4>{section}</h4>
-                    {commands.map((item: any, index: number) => (
-                      <div key={index} className={styles.commandItem}>
-                        <p className={styles.description}>{item.description}</p>
-                        <pre className={styles.command}>
-                          <code>{item.command}</code>
-                        </pre>
-                      </div>
-                    ))}
-                  </div>
-                ))
+                renderUsefulCommands(serviceData)
               ) : (
                 <pre>
                   {typeof serviceData === 'object' 
