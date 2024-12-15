@@ -9,7 +9,6 @@ interface Node {
   name: string;
   pic: string;
   details: string;
-  status: string;
 }
 
 interface NodesData {
@@ -22,27 +21,13 @@ export default function App() {
 
   const fetchNodes = async () => {
     try {
-      const timestamp = new Date().getTime();
-      const response = await fetch(`https://snapshots.coinhunterstr.com/network.json?t=${timestamp}`, {
-        headers: {
-          'Cache-Control': 'no-cache',
-          'Pragma': 'no-cache'
-        }
-      });
-      
+      const response = await fetch('https://snapshots.coinhunterstr.com/network.json');
       if (!response.ok) {
         throw new Error('Network response was not ok');
       }
-      
       const data = await response.json();
-      if (data && typeof data === 'object') {
-        const formattedData = {
-          mainnet: Array.isArray(data.mainnet) ? data.mainnet : [],
-          testnet: Array.isArray(data.testnet) ? data.testnet : []
-        };
-        setNodes(formattedData);
-        console.log('Data loaded:', formattedData);
-      }
+      setNodes(data);
+      console.log('Data loaded:', data);
     } catch (error) {
       console.error('Error fetching nodes:', error);
       setNodes({ mainnet: [], testnet: [] });
@@ -50,12 +35,8 @@ export default function App() {
   };
 
   useEffect(() => {
-    // Initial fetch
     fetchNodes();
-    
-    // Fetch every 30 seconds
     const interval = setInterval(fetchNodes, 30000);
-
     return () => clearInterval(interval);
   }, []);
 
