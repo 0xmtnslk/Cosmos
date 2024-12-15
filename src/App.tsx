@@ -3,6 +3,7 @@ import React, { useState, useEffect } from 'react';
 import Footer from './components/Layout/Footer';
 import Header from './components/Layout/Header';
 import ScrollToTop from './components/ScrollToTop/ScrollToTop';
+import ThemeToggle from './components/ThemeToggle/ThemeToggle';
 import NetworkDetails from './components/NetworkDetails/NetworkDetails';
 import './App.css';
 
