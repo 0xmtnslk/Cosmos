@@ -14,33 +14,25 @@ const NetworkDetails: React.FC<NetworkDetailsProps> = ({ name, description }) =>
         <h1>{name}</h1>
       </div>
       <p>{description}</p>
-      <div className={styles.tools}>
+      
+      <div className={styles.section}>
         <h2>Services</h2>
-        <div className={styles.toolGrid}>
-          <div className={styles.tool}>
-            <h3>Snapshots</h3>
-            <p>Network snapshots and synchronization data</p>
-          </div>
-          <div className={styles.tool}>
-            <h3>Live Peers</h3>
-            <p>Active peers are updated hourly</p>
-          </div>
-          <div className={styles.tool}>
-            <h3>Faucet</h3>
-            <p>Get testnet tokens</p>
-          </div>
-          <div className={styles.tool}>
-            <h3>Public RPC</h3>
-            <p>Access network endpoints</p>
-          </div>
-          <div className={styles.tool}>
-            <h3>Addrbook</h3>
-            <p>Active peers are updated hourly</p>
-          </div>
-          <div className={styles.tool}>
-            <h3>Useful Tools</h3>
-            <p>Additional network utilities</p>
-          </div>
+        <div className={styles.buttonGrid}>
+          <button className={styles.serviceButton}>Installation</button>
+          <button className={styles.serviceButton}>Snapshots</button>
+          <button className={styles.serviceButton}>Upgrade</button>
+          <button className={styles.serviceButton}>Live Peers and Addrbook</button>
+          <button className={styles.serviceButton}>Useful Commands</button>
+          <button className={styles.serviceButton}>Useful Tools</button>
+        </div>
+      </div>
+
+      <div className={styles.section}>
+        <h2>Explorer</h2>
+        <div className={styles.buttonGrid}>
+          <button className={styles.serviceButton}>Block Explorer</button>
+          <button className={styles.serviceButton}>Validator Stats</button>
+          <button className={styles.serviceButton}>Network Status</button>
         </div>
       </div>
     </div>
