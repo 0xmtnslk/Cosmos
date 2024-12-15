@@ -11,59 +11,39 @@ interface NetworkDetailsProps {
 const NetworkDetails: React.FC<NetworkDetailsProps> = ({ name, description, details }) => {
   const [selectedService, setSelectedService] = useState<string>('');
   const [serviceData, setServiceData] = useState<any>(null);
-
-  const services = ['installation', 'snapshots', 'upgrade', 'peers', 'usefulcommands', 'tools'];
-
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+
+  const services = ['installation', 'snapshots', 'upgrade', 'peers', 'usefulcommands', 'tools'];
 
   const fetchServiceData = async (service: string) => {
     setIsLoading(true);
     setError(null);
+    
     try {
       const networkPath = details.includes('mainnet') ? 'mainnet' : 'testnet';
       const networkName = details.split('/').pop() || '';
       const url = `https://snapshots.coinhunterstr.com/site/${networkPath}/${networkName}/${service}.json`;
-      console.log('Fetching URL:', url);
       
       const response = await fetch(url, {
         method: 'GET',
+        mode: 'no-cors',
         headers: {
-          'Accept': 'application/json',
-          'Content-Type': 'application/json',
-        },
-        mode: 'cors',
+          'Accept': 'application/json'
+        }
       });
-      
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
-      }
-      
-      const contentType = response.headers.get("content-type");
-      if (!contentType || !contentType.includes("application/json")) {
-        throw new Error("API did not return JSON");
-      }
-      
+
       const data = await response.json();
-      console.log('Fetched data:', data);
-      if (!data) {
-        throw new Error("No data received");
-      }
       setServiceData(data);
-    } catch (error: any) {
-      console.error('Fetch error details:', error);
-      setError(`Failed to load data: ${error.message}`);
+      setSelectedService(service);
+    } catch (error) {
+      console.error('Error fetching data:', error);
+      setError('Failed to load data. Please try again.');
       setServiceData(null);
     } finally {
       setIsLoading(false);
     }
   };
-
-  useEffect(() => {
-    if (selectedService) {
-      fetchServiceData(selectedService);
-    }
-  }, [selectedService]);
 
   const renderServiceData = () => {
     if (!serviceData) return null;
@@ -138,7 +118,7 @@ const NetworkDetails: React.FC<NetworkDetailsProps> = ({ name, description, deta
         {services.map(service => (
           <button
             key={service}
-            onClick={() => setSelectedService(service)}
+            onClick={() => fetchServiceData(service)}
             className={`${styles.serviceButton} ${selectedService === service ? styles.active : ''}`}
           >
             {service.charAt(0).toUpperCase() + service.slice(1)}
