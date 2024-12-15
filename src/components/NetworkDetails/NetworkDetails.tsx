@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import styles from './NetworkDetails.module.css';
 
@@ -235,7 +234,7 @@ const NetworkDetails: React.FC<NetworkDetailsProps> = ({ name, description }) =>
     <div className={styles.container}>
       <h1>{name}</h1>
       <p className={styles.description}>{description}</p>
-      
+
       <h2>Services</h2>
       <div className={styles.services}>
         <div className={styles.serviceGroup}>
@@ -246,7 +245,7 @@ const NetworkDetails: React.FC<NetworkDetailsProps> = ({ name, description }) =>
             <h3>Installation</h3>
             <p>Node installation guide</p>
           </button>
-          
+
           <button
             onClick={() => setSelectedService('snapshots')}
             className={`${styles.serviceButton} ${selectedService === 'snapshots' ? styles.active : ''}`}
@@ -254,7 +253,7 @@ const NetworkDetails: React.FC<NetworkDetailsProps> = ({ name, description }) =>
             <h3>Snapshots</h3>
             <p>Network snapshots and synchronization data</p>
           </button>
-          
+
           <button
             onClick={() => setSelectedService('peers')}
             className={`${styles.serviceButton} ${selectedService === 'peers' ? styles.active : ''}`}
@@ -272,7 +271,7 @@ const NetworkDetails: React.FC<NetworkDetailsProps> = ({ name, description }) =>
             <h3>Upgrade</h3>
             <p>Node upgrade instructions</p>
           </button>
-          
+
           <button
             onClick={() => setSelectedService('usefulcommands')}
             className={`${styles.serviceButton} ${selectedService === 'usefulcommands' ? styles.active : ''}`}
@@ -280,7 +279,7 @@ const NetworkDetails: React.FC<NetworkDetailsProps> = ({ name, description }) =>
             <h3>Useful Commands</h3>
             <p>Common node commands</p>
           </button>
-          
+
           <button
             onClick={() => setSelectedService('tools')}
             className={`${styles.serviceButton} ${selectedService === 'tools' ? styles.active : ''}`}
@@ -304,9 +303,9 @@ const NetworkDetails: React.FC<NetworkDetailsProps> = ({ name, description }) =>
             <span>Validators:</span> Active: 100 / Total: 150
           </div>
         </div>
-        <a 
-          href="https://explorer.coinhunters.xyz" 
-          target="_blank" 
+        <a
+          href="https://explorer.coinhunters.xyz"
+          target="_blank"
           rel="noopener noreferrer"
           className={styles.explorerLink}
         >
@@ -326,12 +325,12 @@ const NetworkDetails: React.FC<NetworkDetailsProps> = ({ name, description }) =>
                       <p className={styles.description}>{item.description}</p>
                       <pre className={styles.code}>
                         <code>{item.command}</code>
-                        <button 
+                        <button
                           className={styles.copyButton}
                           onClick={(e) => {
                             const btn = e.target as HTMLButtonElement;
                             navigator.clipboard.writeText(item.command);
-                            
+
                             // Create tooltip
                             const tooltip = document.createElement('div');
                             tooltip.textContent = 'Copied!';
@@ -344,10 +343,10 @@ const NetworkDetails: React.FC<NetworkDetailsProps> = ({ name, description }) =>
                             tooltip.style.borderRadius = '4px';
                             tooltip.style.fontSize = '12px';
                             tooltip.style.whiteSpace = 'nowrap';
-                            
+
                             btn.parentElement?.appendChild(tooltip);
                             btn.style.background = '#4CAF50';
-                            
+
                             setTimeout(() => {
                               tooltip.remove();
                               btn.style.background = 'var(--primary-color)';
@@ -362,6 +361,67 @@ const NetworkDetails: React.FC<NetworkDetailsProps> = ({ name, description }) =>
                 </div>
               </div>
             ))}
+          </div>
+        )}
+        {selectedService === 'snapshots' && (
+          <div className={styles.snapshotContainer}>
+            <div className={styles.snapshotInfo}>
+              <div className={styles.snapshotHeader}>
+                <img src="https://pbs.twimg.com/profile_images/1811609717522989056/_jr_bub2_400x400.png" alt="Pell Network" />
+                <div>
+                  <h3>Pell Network</h3>
+                  <p>Height: 138744</p>
+                </div>
+              </div>
+              <div className={styles.snapshotDetails}>
+                <div>
+                  <span>Size:</span> 526M
+                </div>
+                <div>
+                  <span>Date:</span> {new Date("2024-12-15T19:45:11Z").toLocaleString()}
+                </div>
+                <div>
+                  <span>File:</span> pell_2024-12-15_138744_snap.tar.lz4
+                </div>
+              </div>
+              <div className={styles.snapshotScript}>
+                <h4>Installation Script</h4>
+                <pre>
+                  <code>
+                    {`sudo systemctl stop pellcored
+cp $HOME/.pellcored/data/priv_validator_state.json $HOME/.pellcored/priv_validator_state.json.backup
+rm -rf $HOME/.pellcored/data
+curl https://snapshots.coinhunterstr.com/testnet/pell/snapshot_latest.tar.lz4 | lz4 -dc - | tar -xf - -C $HOME/.pellcored
+mv $HOME/.pellcored/priv_validator_state.json.backup $HOME/.pellcored/data/priv_validator_state.json
+sudo systemctl restart pellcored && sudo journalctl -fu pellcored -o cat`}
+                  </code>
+                </pre>
+                <button
+                  className={styles.copyButton}
+                  onClick={(e) => {
+                    const code = `sudo systemctl stop pellcored
+cp $HOME/.pellcored/data/priv_validator_state.json $HOME/.pellcored/priv_validator_state.json.backup
+rm -rf $HOME/.pellcored/data
+curl https://snapshots.coinhunterstr.com/testnet/pell/snapshot_latest.tar.lz4 | lz4 -dc - | tar -xf - -C $HOME/.pellcored
+mv $HOME/.pellcored/priv_validator_state.json.backup $HOME/.pellcored/data/priv_validator_state.json
+sudo systemctl restart pellcored && sudo journalctl -fu pellcored -o cat`;
+                    navigator.clipboard.writeText(code);
+
+                    const btn = e.target as HTMLButtonElement;
+                    const tooltip = document.createElement('div');
+                    tooltip.textContent = 'Copied!';
+                    tooltip.className = styles.tooltip;
+                    btn.appendChild(tooltip);
+
+                    setTimeout(() => {
+                      tooltip.remove();
+                    }, 1500);
+                  }}
+                >
+                  Copy
+                </button>
+              </div>
+            </div>
           </div>
         )}
       </div>

@@ -184,3 +184,100 @@
   background: rgba(255, 68, 68, 0.1);
   border-radius: 4px;
 }
+
+.snapshotContainer {
+  padding: 1rem;
+}
+
+.snapshotInfo {
+  background: var(--bg-color);
+  border-radius: 8px;
+  padding: 2rem;
+  border: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+.snapshotHeader {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.snapshotHeader img {
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+}
+
+.snapshotHeader h3 {
+  margin: 0;
+  font-size: 1.25rem;
+}
+
+.snapshotHeader p {
+  margin: 0.25rem 0 0 0;
+  color: var(--secondary-text-color);
+}
+
+.snapshotDetails {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+  padding: 1rem;
+  background: rgba(0, 0, 0, 0.02);
+  border-radius: 8px;
+}
+
+.snapshotDetails span {
+  font-weight: 600;
+  color: var(--primary-color);
+}
+
+.snapshotScript {
+  position: relative;
+  background: rgba(0, 0, 0, 0.02);
+  border-radius: 8px;
+  padding: 1rem;
+}
+
+.snapshotScript h4 {
+  margin-top: 0;
+  color: var(--primary-color);
+}
+
+.snapshotScript pre {
+  background: rgba(0, 0, 0, 0.03);
+  padding: 1rem;
+  border-radius: 4px;
+  overflow-x: auto;
+  margin: 0;
+}
+
+.snapshotScript code {
+  font-family: monospace;
+  white-space: pre-wrap;
+}
+
+.tooltip {
+  position: absolute;
+  background: #4CAF50;
+  color: white;
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-size: 12px;
+  top: -30px;
+  right: 0;
+  animation: fadeIn 0.3s;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@media (max-width: 768px) {
+  .snapshotDetails {
+    grid-template-columns: 1fr;
+  }
+}
