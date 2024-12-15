@@ -90,6 +90,10 @@
   border: 1px solid rgba(255, 71, 87, 0.2);
 }
 
+.testnet h2 {
+  border-bottom: 2px solid rgba(255, 71, 87, 0.2);
+}
+
 @media (max-width: 768px) {
   h1 {
     font-size: 2rem;
