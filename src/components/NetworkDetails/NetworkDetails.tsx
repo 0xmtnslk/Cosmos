@@ -1,5 +1,5 @@
 
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import styles from './NetworkDetails.module.css';
 
 interface NetworkDetailsProps {
@@ -14,18 +14,21 @@ const NetworkDetails: React.FC<NetworkDetailsProps> = ({ name, description, deta
 
   const services = ['installation', 'snapshots', 'upgrade', 'peers', 'usefulcommands', 'tools'];
 
-  const fetchServiceData = async (service: string) => {
+  const handleServiceClick = async (service: string) => {
     try {
+      setSelectedService(service);
       const networkPath = details.includes('mainnet') ? 'mainnet' : 'testnet';
       const networkName = details.split('/').pop() || '';
       const url = `https://snapshots.coinhunterstr.com/site/${networkPath}/${networkName}/${service}.json`;
-      
+      console.log('Fetching URL:', url);
+
       const response = await fetch(url);
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
       
       const data = await response.json();
+      console.log('Fetched data:', data);
       setServiceData(data);
     } catch (error) {
       console.error('Error fetching data:', error);
@@ -33,68 +36,24 @@ const NetworkDetails: React.FC<NetworkDetailsProps> = ({ name, description, deta
     }
   };
 
-  useEffect(() => {
-    if (selectedService) {
-      fetchServiceData(selectedService);
-    }
-  }, [selectedService, details]);
+  const renderCommandContent = () => {
+    if (!serviceData || !selectedService) return null;
 
-  const renderContent = () => {
-    if (!serviceData) return null;
-
-    switch (selectedService) {
-      case 'usefulcommands':
-      case 'installation':
-      case 'upgrade':
-        return Object.entries(serviceData).map(([section, commands]: [string, any]) => (
-          <div key={section} className={styles.section}>
-            <h3>{section}</h3>
-            {Array.isArray(commands) && commands.map((item: any, index: number) => (
+    return (
+      <div className={styles.commandsContainer}>
+        {Object.entries(serviceData).map(([key, value]: [string, any]) => (
+          <div key={key} className={styles.section}>
+            <h3>{key}</h3>
+            {Array.isArray(value) && value.map((item, index) => (
               <div key={index} className={styles.command}>
                 <p>{item.description}</p>
                 <pre><code>{item.command}</code></pre>
               </div>
             ))}
           </div>
-        ));
-
-      case 'snapshots':
-        return (
-          <div className={styles.section}>
-            <h3>Latest Snapshot</h3>
-            <div className={styles.snapshot}>
-              <p><strong>Height:</strong> {serviceData.height}</p>
-              <p><strong>Size:</strong> {serviceData.size}</p>
-              <p><strong>Download:</strong> <a href={serviceData.download} target="_blank" rel="noopener noreferrer">Download Link</a></p>
-              {serviceData.command && <pre><code>{serviceData.command}</code></pre>}
-            </div>
-          </div>
-        );
-
-      case 'peers':
-        return (
-          <div className={styles.section}>
-            <h3>Live Peers</h3>
-            <pre><code>{serviceData.peers?.join('\n')}</code></pre>
-            <h3>Seeds</h3>
-            <pre><code>{serviceData.seeds?.join('\n')}</code></pre>
-            <h3>Addrbook</h3>
-            <p><a href={serviceData.addrbook} target="_blank" rel="noopener noreferrer">Download Addrbook</a></p>
-          </div>
-        );
-
-      case 'tools':
-        return Object.entries(serviceData).map(([name, tool]: [string, any]) => (
-          <div key={name} className={styles.section}>
-            <h3>{name}</h3>
-            <p>{tool.description}</p>
-            <a href={tool.link} target="_blank" rel="noopener noreferrer">Go to Tool</a>
-          </div>
-        ));
-
-      default:
-        return null;
-    }
+        ))}
+      </div>
+    );
   };
 
   return (
@@ -106,7 +65,7 @@ const NetworkDetails: React.FC<NetworkDetailsProps> = ({ name, description, deta
         {services.map(service => (
           <button
             key={service}
-            onClick={() => setSelectedService(service)}
+            onClick={() => handleServiceClick(service)}
             className={`${styles.serviceButton} ${selectedService === service ? styles.active : ''}`}
           >
             {service.charAt(0).toUpperCase() + service.slice(1)}
@@ -115,7 +74,7 @@ const NetworkDetails: React.FC<NetworkDetailsProps> = ({ name, description, deta
       </div>
 
       <div className={styles.content}>
-        {renderContent()}
+        {renderCommandContent()}
       </div>
     </div>
   );
