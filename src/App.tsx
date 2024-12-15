@@ -64,8 +64,9 @@ export default function App() {
           <NetworkDetails 
             name={selectedNetwork.name}
             description="Join our innovative testnet ecosystem and help shape the future of blockchain."
-        />
-        <Footer />
+          />
+          <Footer />
+        </div>
       </div>
     );
   }
