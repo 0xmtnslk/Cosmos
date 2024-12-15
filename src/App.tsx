@@ -21,7 +21,7 @@ export default function App() {
 
   const fetchNodes = async () => {
     try {
-      const response = await fetch('/src/data/nodes.json');
+      const response = await fetch('https://snapshots.coinhunterstr.com/network.json');
       const data = await response.json();
       setNodes(data);
     } catch (error) {
