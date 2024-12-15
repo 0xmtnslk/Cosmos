@@ -24,9 +24,9 @@ const Header: React.FC = () => {
       </button>
       <nav className={`${styles.nav} ${isMenuOpen ? styles.active : ''}`}>
         <ul>
-          <li><a href="/" style={{ color: 'var(--text-color)' }}>Ana Sayfa</a></li>
-          <li><a href="/about" style={{ color: 'var(--text-color)' }}>Hakkımızda</a></li>
-          <li><a href="/contact" style={{ color: 'var(--text-color)' }}>İletişim</a></li>
+          <li><a href="/" style={{ color: 'var(--text-color)' }}>Home</a></li>
+          <li><a href="https://nodes.coinhunterstr.com/" target="_blank" rel="noopener noreferrer" style={{ color: 'var(--text-color)' }}>Nodes</a></li>
+          <li><a href="https://coinhunterstr.com/iletisim/" target="_blank" rel="noopener noreferrer" style={{ color: 'var(--text-color)' }}>Contact</a></li>
         </ul>
       </nav>
     </header>
