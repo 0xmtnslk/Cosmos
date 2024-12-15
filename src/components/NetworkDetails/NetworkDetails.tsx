@@ -367,19 +367,20 @@ const NetworkDetails: React.FC<NetworkDetailsProps> = ({ name, description }) =>
           <div className={styles.snapshotContainer}>
             <div className={styles.snapshotInfo}>
               <div className={styles.snapshotHeader}>
-                <img src="https://pbs.twimg.com/profile_images/1811609717522989056/_jr_bub2_400x400.png" alt="Pell Network" />
+                <img src="https://pbs.twimg.com/profile_images/1811609717522989056/_jr_bub2_400x400.png" alt="Network" />
                 <div>
-                  <h3>Pell Network</h3>
+                  <h3>Network Snapshot</h3>
                   <p>Height: 138744</p>
                 </div>
               </div>
               <div className={styles.snapshotDetails}>
                 <div>
-                  <span>Size:</span> {size}
+                  <span>Size:</span> 526 MB
                 </div>
                 <div>
                   <span>Time:</span> {(() => {
-                    const date = new Date(snapshotDate);
+                    const date = new Date();
+                    date.setHours(date.getHours() - 2); // Example: 2 hours ago
                     const now = new Date();
                     const diff = Math.floor((now.getTime() - date.getTime()) / 1000);
                     
@@ -390,7 +391,7 @@ const NetworkDetails: React.FC<NetworkDetailsProps> = ({ name, description }) =>
                   })()}
                 </div>
                 <div>
-                  <span>File:</span> pell_2024-12-15_138744_snap.tar.lz4
+                  <span>File:</span> snapshot_latest.tar.lz4
                 </div>
               </div>
               <div className={styles.snapshotScript}>
