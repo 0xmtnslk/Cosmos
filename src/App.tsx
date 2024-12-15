@@ -26,11 +26,23 @@ export default function App() {
       if (!response.ok) {
         throw new Error('Network response was not ok');
       }
-      const data = await response.json();
-      setNodes(data);
-      console.log('Data loaded:', data);
+      const text = await response.text(); // First get the raw text
+      console.log('Raw response:', text); // Log the raw response
+      try {
+        const data = JSON.parse(text); // Then parse it
+        if (data && typeof data === 'object' && 'mainnet' in data && 'testnet' in data) {
+          setNodes(data);
+          console.log('Data loaded:', data);
+        } else {
+          throw new Error('Invalid data structure');
+        }
+      } catch (parseError) {
+        console.error('JSON Parse Error:', parseError);
+        throw parseError;
+      }
     } catch (error) {
       console.error('Error fetching nodes:', error);
+      setNodes({ mainnet: [], testnet: [] }); // Reset to empty state on error
     }
   };
 
