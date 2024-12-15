@@ -16,14 +16,14 @@ const NetworkDetails: React.FC<NetworkDetailsProps> = ({ name, description, deta
 
   const fetchServiceData = async (service: string) => {
     try {
-      const baseUrl = 'https://snapshots.coinhunterstr.com/site';
       const networkPath = details.includes('mainnet') ? 'mainnet' : 'testnet';
-      const networkName = details.split('/').pop();
-      const url = `${baseUrl}/${networkPath}/${networkName}/${service}.json`;
+      const networkName = details.split('/').pop() || '';
+      const url = `https://snapshots.coinhunterstr.com/site/${networkPath}/${networkName}/${service}.json`;
       console.log('Fetching from:', url);
-      const response = await fetch(url);
       
+      const response = await fetch(url);
       if (!response.ok) throw new Error('Network response was not ok');
+      
       const data = await response.json();
       setServiceData(data);
     } catch (error) {
@@ -32,9 +32,16 @@ const NetworkDetails: React.FC<NetworkDetailsProps> = ({ name, description, deta
     }
   };
 
+  useEffect(() => {
+    if (selectedService) {
+      fetchServiceData(selectedService);
+      const interval = setInterval(() => fetchServiceData(selectedService), 30000);
+      return () => clearInterval(interval);
+    }
+  }, [selectedService, details]);
+
   const handleServiceClick = (service: string) => {
     setSelectedService(service);
-    fetchServiceData(service);
   };
 
   const renderUsefulCommands = (data: any) => {
