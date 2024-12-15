@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import styles from './NetworkDetails.module.css';
 
@@ -36,34 +35,34 @@ const NetworkDetails: React.FC<NetworkDetailsProps> = ({ name, description, deta
       const url = `https://snapshots.coinhunterstr.com/site/${networkPath}/${networkName}/${service}.json`;
       console.log('Fetching from URL:', url);
 
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), 5000);
+
       const response = await fetch(url, {
         method: 'GET',
         headers: {
           'Accept': 'application/json',
+          'Cache-Control': 'no-cache'
         },
-        mode: 'cors',
-        cache: 'no-cache',
+        signal: controller.signal
       });
 
+      clearTimeout(timeoutId);
+
       if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
+        throw new Error(`Network response was not ok: ${response.status}`);
       }
 
-      const text = await response.text();
-      console.log('Raw response:', text);
-      
-      try {
-        const data = JSON.parse(text);
-        console.log('Parsed data:', data);
-      console.log('Received data:', data);
+      const data = await response.json();
+      console.log('Fetched data:', data);
       setServiceData(data);
-      } catch (parseError) {
-        console.error('JSON Parse error:', parseError);
-        throw new Error(`JSON ayrıştırma hatası: ${parseError.message}`);
-      }
     } catch (error: any) {
-      console.error('Fetch error:', error);
-      setError(error.message || 'Failed to load data');
+      console.error('Error fetching data:', error);
+      if (error.name === 'AbortError') {
+        setError('Request timed out. Please try again.');
+      } else {
+        setError(`Failed to load data: ${error.message}`);
+      }
       setServiceData(null);
     } finally {
       setIsLoading(false);
