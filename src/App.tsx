@@ -3,6 +3,7 @@ import React, { useState, useEffect } from 'react';
 import Footer from './components/Layout/Footer';
 import Header from './components/Layout/Header';
 import ScrollToTop from './components/ScrollToTop/ScrollToTop';
+import NetworkDetails from './components/NetworkDetails/NetworkDetails';
 import './App.css';
 
 interface Node {
@@ -20,6 +21,7 @@ interface NodesData {
 
 export default function App() {
   const [nodes, setNodes] = useState<NodesData>({ mainnet: [], testnet: [] });
+  const [selectedNetwork, setSelectedNetwork] = useState<Node | null>(null);
 
   const fetchNodes = async () => {
     try {
@@ -42,9 +44,29 @@ export default function App() {
     return () => clearInterval(interval);
   }, []);
 
-  const handleNodeClick = (details: string) => {
-    window.open(details, '_blank');
+  const handleNodeClick = (node: Node) => {
+    setSelectedNetwork(node);
   };
+
+  const handleBackClick = () => {
+    setSelectedNetwork(null);
+  };
+
+  if (selectedNetwork) {
+    return (
+      <div className="app">
+        <Header />
+        <button onClick={handleBackClick} className="back-button">
+          ← Back to Networks
+        </button>
+        <NetworkDetails 
+          name={selectedNetwork.name}
+          description="Join our innovative testnet ecosystem and help shape the future of blockchain."
+        />
+        <Footer />
+      </div>
+    );
+  }
 
   return (
     <div className="app">
@@ -58,7 +80,7 @@ export default function App() {
                 <button
                   key={index}
                   className="node-button"
-                  onClick={() => handleNodeClick(node.details)}
+                  onClick={() => handleNodeClick(node)}
                 >
                   <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
                     {node.pic && <img src={node.pic} alt={node.name} className="node-icon" />}
@@ -86,7 +108,7 @@ export default function App() {
                 <button
                   key={index}
                   className="node-button"
-                  onClick={() => handleNodeClick(node.details)}
+                  onClick={() => handleNodeClick(node)}
                 >
                   <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
                     {node.pic && <img src={node.pic} alt={node.name} className="node-icon" />}
@@ -112,7 +134,7 @@ export default function App() {
                 <button
                   key={index}
                   className="node-button"
-                  onClick={() => handleNodeClick(node.details)}
+                  onClick={() => handleNodeClick(node)}
                 >
                   <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
                     {node.pic && <img src={node.pic} alt={node.name} className="node-icon" />}

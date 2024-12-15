@@ -1,0 +1,44 @@
+
+.container {
+  padding: 2rem;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.container h1 {
+  margin-bottom: 1rem;
+  color: var(--text-color);
+}
+
+.container p {
+  color: var(--secondary-text-color);
+  margin-bottom: 2rem;
+}
+
+.tools h2 {
+  color: var(--text-color);
+  margin-bottom: 1.5rem;
+}
+
+.toolGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 1.5rem;
+}
+
+.tool {
+  background: var(--bg-color);
+  padding: 1.5rem;
+  border-radius: 8px;
+  border: 1px solid var(--hover-color);
+}
+
+.tool h3 {
+  color: var(--text-color);
+  margin-bottom: 0.5rem;
+}
+
+.tool p {
+  margin: 0;
+  font-size: 0.9rem;
+}
