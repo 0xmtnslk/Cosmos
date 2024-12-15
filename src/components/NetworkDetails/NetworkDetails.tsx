@@ -22,10 +22,13 @@ const NetworkDetails: React.FC<NetworkDetailsProps> = ({ name, description, deta
       const baseUrl = 'https://snapshots.coinhunterstr.com/site';
       const networkPath = details.includes('mainnet') ? 'mainnet' : 'testnet';
       const networkName = details.split('/').pop();
-      const response = await fetch(`${baseUrl}/${networkPath}/${networkName}/${service}.json`);
+      const url = `${baseUrl}/${networkPath}/${networkName}/${service}.json`;
+      console.log('Fetching from:', url);
+      const response = await fetch(url);
       
       if (!response.ok) throw new Error('Network response was not ok');
       const data = await response.json();
+      console.log(`${service} data:`, data);
       return {
         title: service.charAt(0).toUpperCase() + service.slice(1),
         content: data
