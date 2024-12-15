@@ -263,13 +263,27 @@ const NetworkDetails: React.FC<NetworkDetailsProps> = ({ name, description }) =>
                         <button 
                           className={styles.copyButton}
                           onClick={(e) => {
-                            navigator.clipboard.writeText(item.command);
                             const btn = e.target as HTMLButtonElement;
-                            const originalText = btn.textContent;
-                            btn.textContent = 'Copied!';
+                            navigator.clipboard.writeText(item.command);
+                            
+                            // Create tooltip
+                            const tooltip = document.createElement('div');
+                            tooltip.textContent = 'Copied!';
+                            tooltip.style.position = 'absolute';
+                            tooltip.style.right = '100%';
+                            tooltip.style.marginRight = '10px';
+                            tooltip.style.background = '#4CAF50';
+                            tooltip.style.color = 'white';
+                            tooltip.style.padding = '5px 10px';
+                            tooltip.style.borderRadius = '4px';
+                            tooltip.style.fontSize = '12px';
+                            tooltip.style.whiteSpace = 'nowrap';
+                            
+                            btn.parentElement?.appendChild(tooltip);
                             btn.style.background = '#4CAF50';
+                            
                             setTimeout(() => {
-                              btn.textContent = originalText;
+                              tooltip.remove();
                               btn.style.background = 'var(--primary-color)';
                             }, 1500);
                           }}
