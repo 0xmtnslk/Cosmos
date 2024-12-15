@@ -25,27 +25,43 @@ const NetworkDetails: React.FC<NetworkDetailsProps> = ({ name, description, deta
     const url = `https://snapshots.coinhunterstr.com/site/${networkPath}/${networkName}/${service}.json`;
 
     try {
-      const response = await fetch(url);
+      const response = await fetch(url, {
+        method: 'GET',
+        headers: {
+          'Accept': 'application/json',
+          'Content-Type': 'application/json',
+        },
+        mode: 'cors',
+      });
+
       if (!response.ok) {
-        throw new Error('Network response was not ok');
+        throw new Error(`HTTP error! status: ${response.status}`);
       }
+
       const data = await response.json();
+      console.log('Fetched data:', data); // Debug log
       setServiceData(data);
-      console.log('Fetched data:', data);
-    } catch (error) {
-      console.error('Error fetching data:', error);
-      setError('Failed to load data. Please try again.');
+    } catch (error: any) {
+      console.error('Error fetching data:', error.message);
+      setError(`Failed to load data: ${error.message}`);
     } finally {
       setIsLoading(false);
     }
   };
 
+  useEffect(() => {
+    if (selectedService) {
+      fetchData(selectedService);
+    }
+  }, [selectedService, details]);
+
   const handleServiceClick = (service: string) => {
     setSelectedService(service);
-    fetchData(service);
   };
 
   const renderServiceData = () => {
+    if (isLoading) return <div>Loading...</div>;
+    if (error) return <div className={styles.error}>{error}</div>;
     if (!serviceData) return null;
 
     return (
@@ -88,9 +104,7 @@ const NetworkDetails: React.FC<NetworkDetailsProps> = ({ name, description, deta
       </div>
 
       <div className={styles.content}>
-        {isLoading && <div>Loading...</div>}
-        {error && <div className={styles.error}>{error}</div>}
-        {!isLoading && !error && renderServiceData()}
+        {renderServiceData()}
       </div>
     </div>
   );
