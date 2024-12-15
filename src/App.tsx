@@ -22,29 +22,15 @@ export default function App() {
 
   const fetchNodes = async () => {
     try {
-      const data = {
-        mainnet: [
-          {
-            name: "Sui Node",
-            pic: "https://example.com/sui-logo.png",
-            details: "https://nodes.coinhunterstr.com/sui",
-            status: "ongoing"
-          }
-        ],
-        testnet: [
-          {
-            name: "Massa Node",
-            pic: "https://example.com/massa-logo.png",
-            details: "https://nodes.coinhunterstr.com/massa",
-            status: "finish"
-          }
-        ]
-      };
-      
+      const response = await fetch('https://snapshots.coinhunterstr.com/network.json');
+      if (!response.ok) {
+        throw new Error('Network response was not ok');
+      }
+      const data = await response.json();
       setNodes(data);
       console.log('Data loaded:', data);
     } catch (error) {
-      console.error('Error:', error);
+      console.error('Error fetching nodes:', error);
     }
   };
 
