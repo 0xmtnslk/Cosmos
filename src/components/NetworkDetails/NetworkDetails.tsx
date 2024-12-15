@@ -50,10 +50,10 @@ const NetworkDetails: React.FC<NetworkDetailsProps> = ({ name, description, deta
     if (selectedService === 'usefulcommands') {
       return (
         <div className={styles.commandsContainer}>
-          {Object.entries(serviceData).map(([key, value]: [string, any]) => (
+          {Object.entries(serviceData).map(([key, commands]: [string, any]) => (
             <div key={key} className={styles.commandSection}>
               <h4>{key}</h4>
-              {Array.isArray(value) && value.map((item: any, index: number) => (
+              {commands.map((item: any, index: number) => (
                 <div key={index} className={styles.commandItem}>
                   <p className={styles.description}>{item.description}</p>
                   <pre className={styles.command}>
