@@ -1,6 +1,8 @@
 
 import React from 'react';
 import Header from './components/Layout/Header';
+import ScrollToTop from './components/ScrollToTop/ScrollToTop';
+import ThemeToggle from './components/ThemeToggle/ThemeToggle';
 import './App.css';
 
 export default function App() {
@@ -11,6 +13,8 @@ export default function App() {
         <h1>Hoş Geldiniz</h1>
         <p>Modern web uygulamanız hazır!</p>
       </main>
+      <ScrollToTop />
+      <ThemeToggle />
     </div>
   );
 }
