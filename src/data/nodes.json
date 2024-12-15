@@ -1,0 +1,17 @@
+
+{
+  "mainnet": [
+    {
+      "name": "Sui Node",
+      "pic": "https://example.com/sui-logo.png",
+      "details": "https://nodes.coinhunterstr.com/sui"
+    }
+  ],
+  "testnet": [
+    {
+      "name": "Massa Node",
+      "pic": "https://example.com/massa-logo.png",
+      "details": "https://nodes.coinhunterstr.com/massa"
+    }
+  ]
+}
