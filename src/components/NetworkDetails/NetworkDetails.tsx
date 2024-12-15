@@ -120,11 +120,27 @@ const NetworkDetails: React.FC<NetworkDetailsProps> = ({ name, description, deta
           <div className={styles.serviceContent}>
             <h3>{serviceData[selectedService].title}</h3>
             <div className={styles.contentBox}>
-              <pre>
-                {typeof serviceData[selectedService].content === 'object' 
-                  ? JSON.stringify(serviceData[selectedService].content, null, 2)
-                  : serviceData[selectedService].content}
-              </pre>
+              {selectedService === 'usefulcommands' && serviceData[selectedService].content ? (
+                Object.entries(serviceData[selectedService].content).map(([section, data]: [string, any]) => (
+                  <div key={section} className={styles.commandSection}>
+                    <h4>{section}</h4>
+                    {data.map((item: any, index: number) => (
+                      <div key={index} className={styles.commandItem}>
+                        <p className={styles.description}>{item.description}</p>
+                        <pre className={styles.command}>
+                          <code>{item.command}</code>
+                        </pre>
+                      </div>
+                    ))}
+                  </div>
+                ))
+              ) : (
+                <pre>
+                  {typeof serviceData[selectedService].content === 'object' 
+                    ? JSON.stringify(serviceData[selectedService].content, null, 2)
+                    : serviceData[selectedService].content}
+                </pre>
+              )}
             </div>
           </div>
         )}

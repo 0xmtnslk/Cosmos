@@ -128,6 +128,41 @@
   font-size: 14px;
 }
 
+.commandSection {
+  margin-bottom: 24px;
+}
+
+.commandSection h4 {
+  color: var(--text-color);
+  margin-bottom: 12px;
+  font-size: 18px;
+  border-bottom: 1px solid var(--hover-color);
+  padding-bottom: 8px;
+}
+
+.commandItem {
+  margin-bottom: 16px;
+}
+
+.description {
+  margin-bottom: 8px;
+  color: var(--secondary-text-color);
+}
+
+.command {
+  background: var(--hover-color);
+  padding: 12px;
+  border-radius: 4px;
+  position: relative;
+  margin: 0;
+}
+
+.command code {
+  display: block;
+  white-space: pre-wrap;
+  word-break: break-all;
+}
+
 @media (max-width: 768px) {
   .buttonGrid {
     grid-template-columns: 1fr;
