@@ -29,17 +29,11 @@ const Header: React.FC = () => {
       <button onClick={toggleMenu} className={styles.menuButton}>
         ☰
       </button>
-      <div className={styles.navButtons}>
-        <button className={styles.navButton} onClick={() => scrollToSection('mainnet')}>
-          Mainnet
-        </button>
-        <button className={styles.navButton} onClick={() => scrollToSection('testnet')}>
-          Testnet
-        </button>
-      </div>
       <nav className={`${styles.nav} ${isMenuOpen ? styles.active : ''}`}>
         <ul>
           <li><a href="/" style={{ color: 'var(--text-color)' }}>Home</a></li>
+          <li><a href="#" onClick={(e) => { e.preventDefault(); scrollToSection('mainnet'); }} style={{ color: 'var(--text-color)' }}>Mainnet</a></li>
+          <li><a href="#" onClick={(e) => { e.preventDefault(); scrollToSection('testnet'); }} style={{ color: 'var(--text-color)' }}>Testnet</a></li>
           <li><a href="https://nodes.coinhunterstr.com/" target="_blank" rel="noopener noreferrer" style={{ color: 'var(--text-color)' }}>Nodes</a></li>
           <li><a href="https://coinhunterstr.com/iletisim/" target="_blank" rel="noopener noreferrer" style={{ color: 'var(--text-color)' }}>Contact</a></li>
         </ul>
