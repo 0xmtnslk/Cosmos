@@ -22,11 +22,14 @@ const NetworkDetails: React.FC<NetworkDetailsProps> = ({ name, description, deta
       console.log('Fetching from:', url);
       
       const response = await fetch(url);
-      if (!response.ok) throw new Error('Network response was not ok');
+      if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
       
       const data = await response.json();
+      console.log('Received data:', data);
       setServiceData(data);
+      setSelectedService(service);
     } catch (error) {
+      console.error('Error fetching data:', error);
       console.error(`Error fetching ${service} data:`, error);
       setServiceData(null);
     }
@@ -45,32 +48,28 @@ const NetworkDetails: React.FC<NetworkDetailsProps> = ({ name, description, deta
   };
 
   const renderServiceContent = () => {
-    if (!serviceData) return null;
-
-    if (selectedService === 'usefulcommands') {
-      return (
-        <div className={styles.commandsContainer}>
-          {Object.entries(serviceData).map(([key, commands]: [string, any]) => (
-            <div key={key} className={styles.commandSection}>
-              <h4>{key}</h4>
-              {commands.map((item: any, index: number) => (
-                <div key={index} className={styles.commandItem}>
-                  <p className={styles.description}>{item.description}</p>
-                  <pre className={styles.command}>
-                    <code>{item.command}</code>
-                  </pre>
-                </div>
-              ))}
-            </div>
-          ))}
-        </div>
-      );
+    if (!serviceData) {
+      return <div>Loading...</div>;
     }
 
+    console.log('Rendering service data:', serviceData);
+
     return (
-      <pre className={styles.jsonContent}>
-        {JSON.stringify(serviceData, null, 2)}
-      </pre>
+      <div className={styles.commandsContainer}>
+        {Object.entries(serviceData).map(([key, commands]: [string, any]) => (
+          <div key={key} className={styles.commandSection}>
+            <h4>{key}</h4>
+            {Array.isArray(commands) && commands.map((item: any, index: number) => (
+              <div key={index} className={styles.commandItem}>
+                <p className={styles.description}>{item.description}</p>
+                <pre className={styles.command}>
+                  <code>{item.command}</code>
+                </pre>
+              </div>
+            ))}
+          </div>
+        ))}
+      </div>
     );
   };
 
