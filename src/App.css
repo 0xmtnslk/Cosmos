@@ -122,7 +122,6 @@
 
 .status-indicator.finish {
   background-color: #f44336;
-  animation: blink 1s infinite;
 }
 
 @keyframes blink {
