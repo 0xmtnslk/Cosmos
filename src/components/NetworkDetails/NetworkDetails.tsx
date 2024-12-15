@@ -1,5 +1,5 @@
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import styles from './NetworkDetails.module.css';
 
 interface NetworkDetailsProps {
@@ -14,46 +14,46 @@ const NetworkDetails: React.FC<NetworkDetailsProps> = ({ name, description, deta
 
   const services = ['installation', 'snapshots', 'upgrade', 'peers', 'usefulcommands', 'tools'];
 
-  const handleServiceClick = async (service: string) => {
+  const fetchServiceData = async (service: string) => {
     try {
-      setSelectedService(service);
       const networkPath = details.includes('mainnet') ? 'mainnet' : 'testnet';
       const networkName = details.split('/').pop() || '';
       const url = `https://snapshots.coinhunterstr.com/site/${networkPath}/${networkName}/${service}.json`;
       console.log('Fetching URL:', url);
-
-      const response = await fetch(url);
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
-      }
       
+      const response = await fetch(url);
       const data = await response.json();
       console.log('Fetched data:', data);
       setServiceData(data);
     } catch (error) {
-      console.error('Error fetching data:', error);
+      console.error('Error:', error);
       setServiceData(null);
     }
   };
 
-  const renderCommandContent = () => {
-    if (!serviceData || !selectedService) return null;
+  useEffect(() => {
+    if (selectedService) {
+      fetchServiceData(selectedService);
+    }
+  }, [selectedService]);
 
-    return (
-      <div className={styles.commandsContainer}>
-        {Object.entries(serviceData).map(([key, value]: [string, any]) => (
-          <div key={key} className={styles.section}>
-            <h3>{key}</h3>
-            {Array.isArray(value) && value.map((item, index) => (
-              <div key={index} className={styles.command}>
-                <p>{item.description}</p>
-                <pre><code>{item.command}</code></pre>
-              </div>
-            ))}
-          </div>
-        ))}
-      </div>
-    );
+  const renderServiceData = () => {
+    if (!serviceData) return null;
+
+    if (selectedService === 'usefulcommands') {
+      return Object.entries(serviceData).map(([title, commands]: [string, any]) => (
+        <div key={title} className={styles.section}>
+          <h3>{title}</h3>
+          {Array.isArray(commands) && commands.map((cmd: any, index: number) => (
+            <div key={index} className={styles.command}>
+              <p>{cmd.description}</p>
+              <pre><code>{cmd.command}</code></pre>
+            </div>
+          ))}
+        </div>
+      ));
+    }
+    return null;
   };
 
   return (
@@ -65,7 +65,7 @@ const NetworkDetails: React.FC<NetworkDetailsProps> = ({ name, description, deta
         {services.map(service => (
           <button
             key={service}
-            onClick={() => handleServiceClick(service)}
+            onClick={() => setSelectedService(service)}
             className={`${styles.serviceButton} ${selectedService === service ? styles.active : ''}`}
           >
             {service.charAt(0).toUpperCase() + service.slice(1)}
@@ -74,7 +74,7 @@ const NetworkDetails: React.FC<NetworkDetailsProps> = ({ name, description, deta
       </div>
 
       <div className={styles.content}>
-        {renderCommandContent()}
+        {renderServiceData()}
       </div>
     </div>
   );
