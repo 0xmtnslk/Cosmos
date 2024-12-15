@@ -27,8 +27,15 @@ export default function App() {
         throw new Error('Network response was not ok');
       }
       const data = await response.json();
-      console.log('Fetched data:', data); // Debug log
-      setNodes(data);
+      
+      // Sort nodes alphabetically by name
+      const sortedData = {
+        mainnet: [...data.mainnet].sort((a, b) => a.name.localeCompare(b.name)),
+        testnet: [...data.testnet].sort((a, b) => a.name.localeCompare(b.name))
+      };
+      
+      console.log('Fetched and sorted data:', sortedData);
+      setNodes(sortedData);
     } catch (error) {
       console.error('Error fetching nodes:', error);
     }
