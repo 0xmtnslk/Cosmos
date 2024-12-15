@@ -88,31 +88,23 @@ const NetworkDetails: React.FC<NetworkDetailsProps> = ({ name, description, deta
       return <div className={styles.error}>{error}</div>;
     }
 
-    if (!serviceData) {
+    if (!serviceData || !serviceData.commands) {
       return null;
     }
 
     return (
       <div className={styles.serviceContent}>
-        {Object.entries(serviceData).map(([section, commands]) => (
-          <div key={section} className={styles.section}>
-            <h3>{section}</h3>
-            {Array.isArray(commands) ? (
-              commands.map((cmd, index) => (
-                <div key={index} className={styles.command}>
-                  {cmd.description && <p>{cmd.description}</p>}
-                  {cmd.command && (
-                    <pre>
-                      <code>{cmd.command}</code>
-                    </pre>
-                  )}
-                </div>
-              ))
-            ) : (
-              <pre>
-                <code>{JSON.stringify(commands, null, 2)}</code>
-              </pre>
-            )}
+        {Object.entries(serviceData.commands).map(([category, categoryCommands]) => (
+          <div key={category} className={styles.section}>
+            <h3>{category.replace(/_/g, ' ').toUpperCase()}</h3>
+            {Object.entries(categoryCommands).map(([cmdKey, cmdData]) => (
+              <div key={cmdKey} className={styles.command}>
+                <p>{cmdData.description}</p>
+                <pre>
+                  <code>{cmdData.command}</code>
+                </pre>
+              </div>
+            ))}
           </div>
         ))}
       </div>
