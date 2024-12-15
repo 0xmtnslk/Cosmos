@@ -21,14 +21,13 @@ export default function App() {
 
   const fetchNodes = async () => {
     try {
-      const response = await fetch('https://snapshots.coinhunterstr.com/network.json', {
-        cache: 'no-store',
-        headers: {
-          'Cache-Control': 'no-cache',
-          'Pragma': 'no-cache'
-        }
-      });
+      const timestamp = new Date().getTime();
+      const response = await fetch(`https://snapshots.coinhunterstr.com/network.json?t=${timestamp}`);
+      if (!response.ok) {
+        throw new Error('Network response was not ok');
+      }
       const data = await response.json();
+      console.log('Fetched data:', data); // Debug log
       setNodes(data);
     } catch (error) {
       console.error('Error fetching nodes:', error);
@@ -38,23 +37,11 @@ export default function App() {
   useEffect(() => {
     // Initial fetch
     fetchNodes();
+    
+    // Fetch every 30 seconds
+    const interval = setInterval(fetchNodes, 30000);
 
-    // Set up polling every 5 minutes
-    const interval = setInterval(fetchNodes, 300000);
-
-    // Add event listener for page visibility changes
-    const handleVisibilityChange = () => {
-      if (document.visibilityState === 'visible') {
-        fetchNodes();
-      }
-    };
-    document.addEventListener('visibilitychange', handleVisibilityChange);
-
-    // Cleanup
-    return () => {
-      clearInterval(interval);
-      document.removeEventListener('visibilitychange', handleVisibilityChange);
-    };
+    return () => clearInterval(interval);
   }, []);
 
   const handleNodeClick = (details: string) => {
