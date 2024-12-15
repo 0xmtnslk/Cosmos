@@ -13,35 +13,34 @@ const NetworkDetails: React.FC<NetworkDetailsProps> = ({ name, description, deta
   const [serviceData, setServiceData] = useState<any>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [commandsData, setCommandsData] = useState<any>(null);
 
   const services = ['installation', 'snapshots', 'upgrade', 'peers', 'usefulcommands', 'tools'];
 
-  const fetchServiceData = async (service: string) => {
-    setIsLoading(true);
-    setError(null);
+  useEffect(() => {
+    const networkPath = details.includes('mainnet') ? 'mainnet' : 'testnet';
+    const networkName = details.split('/').pop() || '';
     
-    try {
-      const networkPath = details.includes('mainnet') ? 'mainnet' : 'testnet';
-      const networkName = details.split('/').pop() || '';
-      const url = `https://snapshots.coinhunterstr.com/site/${networkPath}/${networkName}/${service}.json`;
-      
-      const response = await fetch(url, {
-        method: 'GET',
-        mode: 'no-cors',
-        headers: {
-          'Accept': 'application/json'
-        }
-      });
+    const fetchInitialData = async () => {
+      try {
+        const url = `https://snapshots.coinhunterstr.com/site/${networkPath}/${networkName}/usefulcommands.json`;
+        const response = await fetch(url);
+        const data = await response.json();
+        setCommandsData(data);
+      } catch (error) {
+        console.error('Error fetching data:', error);
+      }
+    };
 
-      const data = await response.json();
-      setServiceData(data);
-      setSelectedService(service);
-    } catch (error) {
-      console.error('Error fetching data:', error);
-      setError('Failed to load data. Please try again.');
+    fetchInitialData();
+  }, [details]);
+
+  const handleServiceClick = (service: string) => {
+    setSelectedService(service);
+    if (service === 'usefulcommands' && commandsData) {
+      setServiceData(commandsData);
+    } else {
       setServiceData(null);
-    } finally {
-      setIsLoading(false);
     }
   };
 
@@ -118,7 +117,7 @@ const NetworkDetails: React.FC<NetworkDetailsProps> = ({ name, description, deta
         {services.map(service => (
           <button
             key={service}
-            onClick={() => fetchServiceData(service)}
+            onClick={() => handleServiceClick(service)}
             className={`${styles.serviceButton} ${selectedService === service ? styles.active : ''}`}
           >
             {service.charAt(0).toUpperCase() + service.slice(1)}
