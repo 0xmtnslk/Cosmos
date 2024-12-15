@@ -24,8 +24,8 @@
 }
 
 .explorerBox {
-  background: white;
-  border: 1px solid rgba(0, 0, 0, 0.1);
+  background: var(--bg-color);
+  border: 1px solid var(--hover-color);
   border-radius: 8px;
   padding: 2rem;
   margin: 1rem;
@@ -37,6 +37,7 @@
   grid-template-columns: repeat(3, 1fr);
   gap: 1rem;
   margin-bottom: 1.5rem;
+  color: var(--text-color);
 }
 
 .explorerStats span {
@@ -72,9 +73,9 @@
 .serviceButton {
   min-height: 120px;
   padding: 1.5rem;
-  border: 1px solid rgba(0, 0, 0, 0.1);
+  border: 1px solid var(--hover-color);
   border-radius: 8px;
-  background: white;
+  background: var(--bg-color);
   color: var(--text-color);
   cursor: pointer;
   transition: all 0.3s;
