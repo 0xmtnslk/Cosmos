@@ -56,9 +56,12 @@ export default function App() {
     return (
       <div className="app">
         <Header />
-        <button onClick={handleBackClick} className="back-button">
-          ← Back to Networks
-        </button>
+        <div className="back-nav">
+          <button onClick={handleBackClick} className="back-button">
+            <span className="back-arrow">←</span>
+            <span className="back-text">Networks</span>
+          </button>
+        </div>
         <NetworkDetails 
           name={selectedNetwork.name}
           description="Join our innovative testnet ecosystem and help shape the future of blockchain."
