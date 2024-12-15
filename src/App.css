@@ -182,10 +182,14 @@ p {
   padding: 0;
 }
 
-.back-nav {
-  background: var(--bg-color);
-  padding: 1rem 2rem;
-  border-bottom: 1px solid var(--hover-color);
+.network-container {
+  padding: 2rem;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.network-container .back-button {
+  margin-bottom: 1.5rem;
 }
 
 .back-button {

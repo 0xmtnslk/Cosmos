@@ -56,15 +56,14 @@ export default function App() {
     return (
       <div className="app">
         <Header />
-        <div className="back-nav">
+        <div className="network-container">
           <button onClick={handleBackClick} className="back-button">
             <span className="back-arrow">←</span>
             <span className="back-text">Networks</span>
           </button>
-        </div>
-        <NetworkDetails 
-          name={selectedNetwork.name}
-          description="Join our innovative testnet ecosystem and help shape the future of blockchain."
+          <NetworkDetails 
+            name={selectedNetwork.name}
+            description="Join our innovative testnet ecosystem and help shape the future of blockchain."
         />
         <Footer />
       </div>
@@ -74,6 +73,7 @@ export default function App() {
   return (
     <div className="app">
       <Header />
+      <ThemeToggle />
       <main className="main">
         <section className="network-section mainnet">
           <h2>Mainnet</h2>

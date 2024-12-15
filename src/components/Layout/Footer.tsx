@@ -27,9 +27,6 @@ const Footer: React.FC = () => {
         <div className={styles.copyright}>
           © 2024 CoinHunters™. All Rights Reserved.
         </div>
-        <div className={styles.themeToggleContainer}>
-          <ThemeToggle />
-        </div>
       </div>
     </footer>
   );
