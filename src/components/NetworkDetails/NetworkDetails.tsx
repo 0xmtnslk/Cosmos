@@ -1,5 +1,5 @@
 
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import styles from './NetworkDetails.module.css';
 
 interface NetworkDetailsProps {
@@ -14,67 +14,24 @@ const NetworkDetails: React.FC<NetworkDetailsProps> = ({ name, description, deta
 
   const services = ['installation', 'snapshots', 'upgrade', 'peers', 'usefulcommands', 'tools'];
 
-  const fetchServiceData = async (service: string) => {
+  const handleServiceClick = async (service: string) => {
     try {
       const networkPath = details.includes('mainnet') ? 'mainnet' : 'testnet';
       const networkName = details.split('/').pop() || '';
       const url = `https://snapshots.coinhunterstr.com/site/${networkPath}/${networkName}/${service}.json`;
-      console.log('Fetching URL:', url);
       
       const response = await fetch(url);
       if (!response.ok) {
-        console.error('Response not ok:', response.status);
         throw new Error(`HTTP error! status: ${response.status}`);
       }
       
       const data = await response.json();
-      console.log('Fetched data:', data);
       setServiceData(data);
+      setSelectedService(service);
     } catch (error) {
-      console.error('Fetch error:', error);
       console.error('Error fetching data:', error);
-      console.error(`Error fetching ${service} data:`, error);
       setServiceData(null);
     }
-  };
-
-  useEffect(() => {
-    if (selectedService) {
-      fetchServiceData(selectedService);
-      const interval = setInterval(() => fetchServiceData(selectedService), 30000);
-      return () => clearInterval(interval);
-    }
-  }, [selectedService, details]);
-
-  const handleServiceClick = (service: string) => {
-    setSelectedService(service);
-    fetchServiceData(service);
-  };
-
-  const renderServiceContent = () => {
-    if (!serviceData) {
-      return <div>Loading...</div>;
-    }
-
-    console.log('Rendering service data:', serviceData);
-
-    return (
-      <div className={styles.commandsContainer}>
-        {Object.entries(serviceData).map(([key, commands]: [string, any]) => (
-          <div key={key} className={styles.commandSection}>
-            <h4>{key}</h4>
-            {Array.isArray(commands) && commands.map((item: any, index: number) => (
-              <div key={index} className={styles.commandItem}>
-                <p className={styles.description}>{item.description}</p>
-                <pre className={styles.command}>
-                  <code>{item.command}</code>
-                </pre>
-              </div>
-            ))}
-          </div>
-        ))}
-      </div>
-    );
   };
 
   return (
@@ -90,7 +47,7 @@ const NetworkDetails: React.FC<NetworkDetailsProps> = ({ name, description, deta
           {services.map((service) => (
             <button
               key={service}
-              className={styles.serviceButton}
+              className={`${styles.serviceButton} ${selectedService === service ? styles.active : ''}`}
               onClick={() => handleServiceClick(service)}
             >
               {service.charAt(0).toUpperCase() + service.slice(1)}
@@ -102,7 +59,19 @@ const NetworkDetails: React.FC<NetworkDetailsProps> = ({ name, description, deta
           <div className={styles.serviceContent}>
             <h3>{selectedService.charAt(0).toUpperCase() + selectedService.slice(1)}</h3>
             <div className={styles.contentBox}>
-              {renderServiceContent()}
+              {Object.entries(serviceData).map(([key, commands]: [string, any]) => (
+                <div key={key} className={styles.commandSection}>
+                  <h4>{key}</h4>
+                  {Array.isArray(commands) && commands.map((item: any, index: number) => (
+                    <div key={index} className={styles.commandItem}>
+                      <p className={styles.description}>{item.description}</p>
+                      <pre className={styles.command}>
+                        <code>{item.command}</code>
+                      </pre>
+                    </div>
+                  ))}
+                </div>
+              ))}
             </div>
           </div>
         )}
