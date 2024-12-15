@@ -57,6 +57,9 @@ const NetworkDetails: React.FC<NetworkDetailsProps> = ({ name, description, deta
     };
 
     loadAllServices();
+    const interval = setInterval(loadAllServices, 30000);
+
+    return () => clearInterval(interval);
   }, [details]);
 
   const handleServiceClick = (serviceName: string) => {
