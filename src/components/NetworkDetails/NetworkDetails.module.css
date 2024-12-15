@@ -172,3 +172,43 @@
     padding: 1rem;
   }
 }
+.commandsContainer {
+  padding: 1rem;
+}
+
+.commandSection {
+  margin-bottom: 2rem;
+}
+
+.commandSection h4 {
+  color: var(--text-color);
+  margin-bottom: 1rem;
+  font-size: 1.2rem;
+}
+
+.commandItem {
+  margin-bottom: 1rem;
+  padding: 1rem;
+  background: rgba(0, 0, 0, 0.05);
+  border-radius: 8px;
+}
+
+.description {
+  margin-bottom: 0.5rem;
+  color: var(--text-color);
+}
+
+.command {
+  background: var(--bg-color);
+  padding: 1rem;
+  border-radius: 4px;
+  overflow-x: auto;
+}
+
+.jsonContent {
+  padding: 1rem;
+  background: var(--bg-color);
+  border-radius: 4px;
+  overflow-x: auto;
+  white-space: pre-wrap;
+}

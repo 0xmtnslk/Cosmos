@@ -44,20 +44,34 @@ const NetworkDetails: React.FC<NetworkDetailsProps> = ({ name, description, deta
     setSelectedService(service);
   };
 
-  const renderUsefulCommands = (data: any) => {
-    return Object.entries(data).map(([section, commands]: [string, any]) => (
-      <div key={section} className={styles.commandSection}>
-        <h4>{section}</h4>
-        {Array.isArray(commands) && commands.map((command: any, index: number) => (
-          <div key={index} className={styles.commandItem}>
-            <p className={styles.description}>{command.description}</p>
-            <pre className={styles.command}>
-              <code>{command.command}</code>
-            </pre>
-          </div>
-        ))}
-      </div>
-    ));
+  const renderServiceContent = () => {
+    if (!serviceData) return null;
+
+    if (selectedService === 'usefulcommands') {
+      return (
+        <div className={styles.commandsContainer}>
+          {Object.entries(serviceData).map(([key, value]: [string, any]) => (
+            <div key={key} className={styles.commandSection}>
+              <h4>{key}</h4>
+              {Array.isArray(value) && value.map((item: any, index: number) => (
+                <div key={index} className={styles.commandItem}>
+                  <p className={styles.description}>{item.description}</p>
+                  <pre className={styles.command}>
+                    <code>{item.command}</code>
+                  </pre>
+                </div>
+              ))}
+            </div>
+          ))}
+        </div>
+      );
+    }
+
+    return (
+      <pre className={styles.jsonContent}>
+        {JSON.stringify(serviceData, null, 2)}
+      </pre>
+    );
   };
 
   return (
@@ -85,15 +99,7 @@ const NetworkDetails: React.FC<NetworkDetailsProps> = ({ name, description, deta
           <div className={styles.serviceContent}>
             <h3>{selectedService.charAt(0).toUpperCase() + selectedService.slice(1)}</h3>
             <div className={styles.contentBox}>
-              {selectedService === 'usefulcommands' ? (
-                renderUsefulCommands(serviceData)
-              ) : (
-                <pre>
-                  {typeof serviceData === 'object' 
-                    ? JSON.stringify(serviceData, null, 2)
-                    : serviceData}
-                </pre>
-              )}
+              {renderServiceContent()}
             </div>
           </div>
         )}
