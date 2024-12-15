@@ -375,10 +375,19 @@ const NetworkDetails: React.FC<NetworkDetailsProps> = ({ name, description }) =>
               </div>
               <div className={styles.snapshotDetails}>
                 <div>
-                  <span>Size:</span> 526M
+                  <span>Size:</span> {size}
                 </div>
                 <div>
-                  <span>Date:</span> {new Date("2024-12-15T19:45:11Z").toLocaleString()}
+                  <span>Time:</span> {(() => {
+                    const date = new Date(snapshotDate);
+                    const now = new Date();
+                    const diff = Math.floor((now.getTime() - date.getTime()) / 1000);
+                    
+                    if (diff < 60) return `${diff} Seconds ago`;
+                    if (diff < 3600) return `${Math.floor(diff / 60)} Minutes ago`;
+                    if (diff < 86400) return `${Math.floor(diff / 3600)} Hours ago`;
+                    return `${Math.floor(diff / 86400)} Days ago`;
+                  })()}
                 </div>
                 <div>
                   <span>File:</span> pell_2024-12-15_138744_snap.tar.lz4
