@@ -84,7 +84,6 @@ export default function App() {
                       <span className="node-description">Click for details</span>
                     </div>
                   </div>
-                  <div className={`status-indicator ${node.status === 'ongoing' ? 'ongoing' : 'finish'}`}></div>
                 </button>
               ))}
             </div>
@@ -108,7 +107,6 @@ export default function App() {
                       <span className="node-description">Click for details</span>
                     </div>
                   </div>
-                  <div className={`status-indicator ${node.status === 'ongoing' ? 'ongoing' : 'finish'}`}></div>
                 </button>
               ))}
             </div>
