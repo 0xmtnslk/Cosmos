@@ -8,64 +8,31 @@ interface NetworkDetailsProps {
   details: string;
 }
 
-interface ServiceData {
-  title: string;
-  content: string;
-}
-
 const NetworkDetails: React.FC<NetworkDetailsProps> = ({ name, description, details }) => {
-  const [serviceData, setServiceData] = useState<{ [key: string]: ServiceData }>({});
   const [selectedService, setSelectedService] = useState<string | null>(null);
+  const [serviceData, setServiceData] = useState<any>(null);
+
+  const services = ['installation', 'snapshots', 'upgrade', 'peers', 'usefulcommands', 'tools'];
 
   const fetchServiceData = async (service: string) => {
     try {
       const baseUrl = 'https://snapshots.coinhunterstr.com/site';
       const networkPath = details.includes('mainnet') ? 'mainnet' : 'testnet';
       const networkName = details.split('/').pop();
-      const url = `${baseUrl}/${networkPath}/${networkName}/${service}.json`;
-      console.log('Fetching from:', url);
-      const response = await fetch(url);
+      const response = await fetch(`${baseUrl}/${networkPath}/${networkName}/${service}.json`);
       
       if (!response.ok) throw new Error('Network response was not ok');
       const data = await response.json();
-      console.log(`${service} data:`, data);
-      return {
-        title: service.charAt(0).toUpperCase() + service.slice(1),
-        content: data
-      };
+      setServiceData(data);
     } catch (error) {
       console.error(`Error fetching ${service} data:`, error);
-      return null;
+      setServiceData(null);
     }
   };
 
-  useEffect(() => {
-    const loadSelectedService = async (serviceName: string) => {
-      const data = await fetchServiceData(serviceName);
-      if (data) {
-        setServiceData(prev => ({
-          ...prev,
-          [serviceName]: data
-        }));
-      }
-    };
-
-    if (selectedService) {
-      loadSelectedService(selectedService);
-      const interval = setInterval(() => loadSelectedService(selectedService), 30000);
-      return () => clearInterval(interval);
-    }
-  }, [selectedService, details]);
-
-  const handleServiceClick = async (serviceName: string) => {
-    setSelectedService(serviceName);
-    const data = await fetchServiceData(serviceName);
-    if (data) {
-      setServiceData(prev => ({
-        ...prev,
-        [serviceName]: data
-      }));
-    }
+  const handleServiceClick = (service: string) => {
+    setSelectedService(service);
+    fetchServiceData(service);
   };
 
   return (
@@ -78,58 +45,26 @@ const NetworkDetails: React.FC<NetworkDetailsProps> = ({ name, description, deta
       <div className={styles.section}>
         <h2>Services</h2>
         <div className={styles.buttonGrid}>
-          {Object.keys(serviceData).length > 0 && (
-            <>
-              <button className={styles.serviceButton} onClick={() => handleServiceClick('installation')}>
-                Installation
-              </button>
-              <button className={styles.serviceButton} onClick={() => handleServiceClick('snapshots')}>
-                Snapshots
-              </button>
-              <button className={styles.serviceButton} onClick={() => handleServiceClick('upgrade')}>
-                Upgrade
-              </button>
-              <button className={styles.serviceButton} onClick={() => handleServiceClick('peers')}>
-                Live Peers and Addrbook
-              </button>
-              <button className={styles.serviceButton} onClick={() => handleServiceClick('usefulcommands')}>
-                Useful Commands
-              </button>
-              <button className={styles.serviceButton} onClick={() => handleServiceClick('tools')}>
-                Useful Tools
-              </button>
-            </>
-          )}
-          {serviceData.snapshots && (
-            <button className={styles.serviceButton} onClick={() => handleServiceClick('snapshots')}>
-              Snapshots
+          {services.map((service) => (
+            <button
+              key={service}
+              className={styles.serviceButton}
+              onClick={() => handleServiceClick(service)}
+            >
+              {service.charAt(0).toUpperCase() + service.slice(1)}
             </button>
-          )}
-          {serviceData.upgrade && (
-            <button className={styles.serviceButton} onClick={() => handleServiceClick('upgrade')}>
-              Upgrade
-            </button>
-          )}
-          {serviceData.peers && (
-            <button className={styles.serviceButton} onClick={() => handleServiceClick('peers')}>
-              Live Peers and Addrbook
-            </button>
-          )}
-          {serviceData.tools && (
-            <button className={styles.serviceButton} onClick={() => handleServiceClick('tools')}>
-              Useful Tools
-            </button>
-          )}
+          ))}
         </div>
-        {selectedService && serviceData[selectedService] && (
+
+        {selectedService && serviceData && (
           <div className={styles.serviceContent}>
-            <h3>{serviceData[selectedService].title}</h3>
+            <h3>{selectedService.charAt(0).toUpperCase() + selectedService.slice(1)}</h3>
             <div className={styles.contentBox}>
-              {selectedService === 'usefulcommands' && serviceData[selectedService].content ? (
-                Object.entries(serviceData[selectedService].content).map(([section, data]: [string, any]) => (
+              {selectedService === 'usefulcommands' ? (
+                Object.entries(serviceData).map(([section, commands]: [string, any]) => (
                   <div key={section} className={styles.commandSection}>
                     <h4>{section}</h4>
-                    {data.map((item: any, index: number) => (
+                    {commands.map((item: any, index: number) => (
                       <div key={index} className={styles.commandItem}>
                         <p className={styles.description}>{item.description}</p>
                         <pre className={styles.command}>
@@ -141,39 +76,14 @@ const NetworkDetails: React.FC<NetworkDetailsProps> = ({ name, description, deta
                 ))
               ) : (
                 <pre>
-                  {typeof serviceData[selectedService].content === 'object' 
-                    ? JSON.stringify(serviceData[selectedService].content, null, 2)
-                    : serviceData[selectedService].content}
+                  {typeof serviceData === 'object' 
+                    ? JSON.stringify(serviceData, null, 2)
+                    : serviceData}
                 </pre>
               )}
             </div>
           </div>
         )}
-      </div>
-
-      <div className={styles.section}>
-        <h2>Chain Information</h2>
-        <div className={styles.chainInfo}>
-          <div className={styles.infoGrid}>
-            <div className={styles.infoItem}>
-              <span className={styles.label}>Chain ID:</span>
-              <span className={styles.value}>dymension_1100-1</span>
-            </div>
-            <div className={styles.infoItem}>
-              <span className={styles.label}>Height:</span>
-              <span className={styles.value}>1234567</span>
-            </div>
-            <div className={styles.infoItem}>
-              <span className={styles.label}>Active Validators:</span>
-              <span className={styles.value}>100</span>
-            </div>
-            <div className={styles.infoItem}>
-              <span className={styles.label}>Total Validators:</span>
-              <span className={styles.value}>150</span>
-            </div>
-          </div>
-          <a href="#" className={styles.explorerLink}>View in Explorer →</a>
-        </div>
       </div>
     </div>
   );
