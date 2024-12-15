@@ -40,33 +40,32 @@ const NetworkDetails: React.FC<NetworkDetailsProps> = ({ name, description, deta
   };
 
   useEffect(() => {
-    const services = [
-      'installation',
-      'snapshots',
-      'upgrade',
-      'peers',
-      'usefulcommands',
-      'tools'
-    ];
-
-    const loadAllServices = async () => {
-      const servicePromises = services.map(service => 
-        fetchServiceData(service).then(data => ({ [service]: data }))
-      );
-      
-      const results = await Promise.all(servicePromises);
-      const combinedData = results.reduce((acc, curr) => ({ ...acc, ...curr }), {});
-      setServiceData(combinedData);
+    const loadSelectedService = async (serviceName: string) => {
+      const data = await fetchServiceData(serviceName);
+      if (data) {
+        setServiceData(prev => ({
+          ...prev,
+          [serviceName]: data
+        }));
+      }
     };
 
-    loadAllServices();
-    const interval = setInterval(loadAllServices, 30000);
+    if (selectedService) {
+      loadSelectedService(selectedService);
+      const interval = setInterval(() => loadSelectedService(selectedService), 30000);
+      return () => clearInterval(interval);
+    }
+  }, [selectedService, details]);
 
-    return () => clearInterval(interval);
-  }, [details]);
-
-  const handleServiceClick = (serviceName: string) => {
+  const handleServiceClick = async (serviceName: string) => {
     setSelectedService(serviceName);
+    const data = await fetchServiceData(serviceName);
+    if (data) {
+      setServiceData(prev => ({
+        ...prev,
+        [serviceName]: data
+      }));
+    }
   };
 
   return (
