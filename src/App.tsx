@@ -70,8 +70,10 @@ export default function App() {
                   onClick={() => handleNodeClick(node.details)}
                 >
                   {node.pic && <img src={node.pic} alt={node.name} className="node-icon" />}
-                  <span className="node-name">{node.name}</span>
-                  <span className="node-description">Click for details</span>
+                  <div className="node-info">
+                    <span className="node-name">{node.name}</span>
+                    <span className="node-description">Click for details</span>
+                  </div>
                 </button>
               ))}
             </div>
@@ -89,8 +91,10 @@ export default function App() {
                   onClick={() => handleNodeClick(node.details)}
                 >
                   {node.pic && <img src={node.pic} alt={node.name} className="node-icon" />}
-                  <span className="node-name">{node.name}</span>
-                  <span className="node-description">Click for details</span>
+                  <div className="node-info">
+                    <span className="node-name">{node.name}</span>
+                    <span className="node-description">Click for details</span>
+                  </div>
                 </button>
               ))}
             </div>
