@@ -48,6 +48,7 @@
   align-items: center;
   padding: 1.2rem;
   background: var(--bg-color);
+  width: 100%;
   border: none;
   border-radius: 8px;
   cursor: pointer;
@@ -74,6 +75,7 @@
   font-size: 1.1rem;
   font-weight: 600;
   color: var(--text-color);
+  display: block;
 }
 
 .node-info {
