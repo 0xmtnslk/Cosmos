@@ -18,14 +18,20 @@ const NetworkDetails: React.FC<NetworkDetailsProps> = ({ name, description }) =>
   useEffect(() => {
     if (selectedService === 'usefulcommands') {
       fetch('/Pasted--key-management-add-new-key-description-Add-a-new-key-comman-1734298136519.txt')
-        .then(response => response.text())
+        .then(response => {
+          if (!response.ok) {
+            throw new Error('Network response was not ok');
+          }
+          return response.text();
+        })
         .then(text => {
           try {
             const jsonData = JSON.parse(text);
+            console.log('Parsed data:', jsonData);
             setCommands(jsonData);
             setError(null);
           } catch (err) {
-            console.error('JSON parse error:', err);
+            console.error('Parse error:', err, 'Text:', text);
             setError('Failed to parse commands data');
           }
         })
@@ -60,12 +66,14 @@ const NetworkDetails: React.FC<NetworkDetailsProps> = ({ name, description }) =>
             {Object.entries(commands).map(([category, items]: [string, any]) => (
               <div key={category} className={styles.category}>
                 <h3>{category.toUpperCase().replace(/_/g, ' ')}</h3>
-                {Object.entries(items).map(([key, item]: [string, any]) => (
-                  <div key={key} className={styles.command}>
-                    <p>{item.description}</p>
-                    <pre><code>{item.command}</code></pre>
-                  </div>
-                ))}
+                <div className={styles.commandList}>
+                  {Object.entries(items).map(([key, item]: [string, any]) => (
+                    <div key={key} className={styles.command}>
+                      <p className={styles.description}>{item.description}</p>
+                      <pre className={styles.code}><code>{item.command}</code></pre>
+                    </div>
+                  ))}
+                </div>
               </div>
             ))}
           </div>
