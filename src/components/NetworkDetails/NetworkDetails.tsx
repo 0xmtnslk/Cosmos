@@ -13,99 +13,61 @@ const NetworkDetails: React.FC<NetworkDetailsProps> = ({ name, description, deta
   const [serviceData, setServiceData] = useState<any>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [commandsData, setCommandsData] = useState<any>(null);
 
   const services = ['installation', 'snapshots', 'upgrade', 'peers', 'usefulcommands', 'tools'];
 
-  useEffect(() => {
+  const fetchData = async (service: string) => {
+    setIsLoading(true);
+    setError(null);
+
     const networkPath = details.includes('mainnet') ? 'mainnet' : 'testnet';
     const networkName = details.split('/').pop() || '';
-    
-    const fetchInitialData = async () => {
-      try {
-        const url = `https://snapshots.coinhunterstr.com/site/${networkPath}/${networkName}/usefulcommands.json`;
-        const response = await fetch(url);
-        const data = await response.json();
-        setCommandsData(data);
-      } catch (error) {
-        console.error('Error fetching data:', error);
-      }
-    };
+    const url = `https://snapshots.coinhunterstr.com/site/${networkPath}/${networkName}/${service}.json`;
 
-    fetchInitialData();
-  }, [details]);
+    try {
+      const response = await fetch(url);
+      if (!response.ok) {
+        throw new Error('Network response was not ok');
+      }
+      const data = await response.json();
+      setServiceData(data);
+      console.log('Fetched data:', data);
+    } catch (error) {
+      console.error('Error fetching data:', error);
+      setError('Failed to load data. Please try again.');
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   const handleServiceClick = (service: string) => {
     setSelectedService(service);
-    if (service === 'usefulcommands' && commandsData) {
-      setServiceData(commandsData);
-    } else {
-      setServiceData(null);
-    }
+    fetchData(service);
   };
 
   const renderServiceData = () => {
     if (!serviceData) return null;
 
-    switch (selectedService) {
-      case 'installation':
-      case 'upgrade':
-      case 'usefulcommands':
-        return Object.entries(serviceData).map(([title, commands]: [string, any]) => (
-          <div key={title} className={styles.section}>
-            <h3>{title}</h3>
-            {Array.isArray(commands) && commands.map((cmd: any, index: number) => (
-              <div key={index} className={styles.command}>
-                <p>{cmd.description}</p>
-                <pre><code>{cmd.command}</code></pre>
-              </div>
-            ))}
+    return (
+      <div className={styles.section}>
+        <h3>{selectedService}</h3>
+        {Object.entries(serviceData).map(([title, commands]: [string, any]) => (
+          <div key={title} className={styles.command}>
+            <h4>{title}</h4>
+            {Array.isArray(commands) ? (
+              commands.map((cmd: any, index: number) => (
+                <div key={index}>
+                  <p>{cmd.description}</p>
+                  <pre><code>{cmd.command}</code></pre>
+                </div>
+              ))
+            ) : (
+              <pre><code>{JSON.stringify(commands, null, 2)}</code></pre>
+            )}
           </div>
-        ));
-
-      case 'snapshots':
-        return (
-          <div className={styles.section}>
-            <h3>Snapshots</h3>
-            {Object.entries(serviceData).map(([key, value]: [string, any]) => (
-              <div key={key} className={styles.command}>
-                <p>{value.description || key}</p>
-                {value.link && <a href={value.link} target="_blank" rel="noopener noreferrer">{value.link}</a>}
-                {value.command && <pre><code>{value.command}</code></pre>}
-              </div>
-            ))}
-          </div>
-        );
-
-      case 'peers':
-        return (
-          <div className={styles.section}>
-            <h3>Peers</h3>
-            {serviceData.map((peer: any, index: number) => (
-              <div key={index} className={styles.command}>
-                <pre><code>{peer}</code></pre>
-              </div>
-            ))}
-          </div>
-        );
-
-      case 'tools':
-        return (
-          <div className={styles.section}>
-            <h3>Tools</h3>
-            {Object.entries(serviceData).map(([name, details]: [string, any]) => (
-              <div key={name} className={styles.command}>
-                <h4>{name}</h4>
-                <p>{details.description}</p>
-                {details.link && <a href={details.link} target="_blank" rel="noopener noreferrer">{details.link}</a>}
-              </div>
-            ))}
-          </div>
-        );
-
-      default:
-        return null;
-    }
+        ))}
+      </div>
+    );
   };
 
   return (
