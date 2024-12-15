@@ -14,7 +14,12 @@ const NetworkDetails: React.FC<NetworkDetailsProps> = ({ name, description, deta
 
   const services = ['installation', 'snapshots', 'upgrade', 'peers', 'usefulcommands', 'tools'];
 
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+
   const fetchServiceData = async (service: string) => {
+    setIsLoading(true);
+    setError(null);
     try {
       const networkPath = details.includes('mainnet') ? 'mainnet' : 'testnet';
       const networkName = details.split('/').pop() || '';
@@ -22,12 +27,18 @@ const NetworkDetails: React.FC<NetworkDetailsProps> = ({ name, description, deta
       console.log('Fetching URL:', url);
       
       const response = await fetch(url);
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
       const data = await response.json();
       console.log('Fetched data:', data);
       setServiceData(data);
     } catch (error) {
       console.error('Error:', error);
+      setError('Failed to load data. Please try again.');
       setServiceData(null);
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -40,20 +51,65 @@ const NetworkDetails: React.FC<NetworkDetailsProps> = ({ name, description, deta
   const renderServiceData = () => {
     if (!serviceData) return null;
 
-    if (selectedService === 'usefulcommands') {
-      return Object.entries(serviceData).map(([title, commands]: [string, any]) => (
-        <div key={title} className={styles.section}>
-          <h3>{title}</h3>
-          {Array.isArray(commands) && commands.map((cmd: any, index: number) => (
-            <div key={index} className={styles.command}>
-              <p>{cmd.description}</p>
-              <pre><code>{cmd.command}</code></pre>
-            </div>
-          ))}
-        </div>
-      ));
+    switch (selectedService) {
+      case 'installation':
+      case 'upgrade':
+      case 'usefulcommands':
+        return Object.entries(serviceData).map(([title, commands]: [string, any]) => (
+          <div key={title} className={styles.section}>
+            <h3>{title}</h3>
+            {Array.isArray(commands) && commands.map((cmd: any, index: number) => (
+              <div key={index} className={styles.command}>
+                <p>{cmd.description}</p>
+                <pre><code>{cmd.command}</code></pre>
+              </div>
+            ))}
+          </div>
+        ));
+
+      case 'snapshots':
+        return (
+          <div className={styles.section}>
+            <h3>Snapshots</h3>
+            {Object.entries(serviceData).map(([key, value]: [string, any]) => (
+              <div key={key} className={styles.command}>
+                <p>{value.description || key}</p>
+                {value.link && <a href={value.link} target="_blank" rel="noopener noreferrer">{value.link}</a>}
+                {value.command && <pre><code>{value.command}</code></pre>}
+              </div>
+            ))}
+          </div>
+        );
+
+      case 'peers':
+        return (
+          <div className={styles.section}>
+            <h3>Peers</h3>
+            {serviceData.map((peer: any, index: number) => (
+              <div key={index} className={styles.command}>
+                <pre><code>{peer}</code></pre>
+              </div>
+            ))}
+          </div>
+        );
+
+      case 'tools':
+        return (
+          <div className={styles.section}>
+            <h3>Tools</h3>
+            {Object.entries(serviceData).map(([name, details]: [string, any]) => (
+              <div key={name} className={styles.command}>
+                <h4>{name}</h4>
+                <p>{details.description}</p>
+                {details.link && <a href={details.link} target="_blank" rel="noopener noreferrer">{details.link}</a>}
+              </div>
+            ))}
+          </div>
+        );
+
+      default:
+        return null;
     }
-    return null;
   };
 
   return (
@@ -74,7 +130,9 @@ const NetworkDetails: React.FC<NetworkDetailsProps> = ({ name, description, deta
       </div>
 
       <div className={styles.content}>
-        {renderServiceData()}
+        {isLoading && <div>Loading...</div>}
+        {error && <div className={styles.error}>{error}</div>}
+        {!isLoading && !error && renderServiceData()}
       </div>
     </div>
   );
