@@ -125,7 +125,11 @@ const NetworkDetails: React.FC<NetworkDetailsProps> = ({ name, description, deta
           <div className={styles.serviceContent}>
             <h3>{serviceData[selectedService].title}</h3>
             <div className={styles.contentBox}>
-              {serviceData[selectedService].content}
+              <pre>
+                {typeof serviceData[selectedService].content === 'object' 
+                  ? JSON.stringify(serviceData[selectedService].content, null, 2)
+                  : serviceData[selectedService].content}
+              </pre>
             </div>
           </div>
         )}

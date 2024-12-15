@@ -119,6 +119,13 @@
   background: var(--hover-color);
   border-radius: 6px;
   color: var(--text-color);
+  overflow-x: auto;
+}
+
+.contentBox pre {
+  margin: 0;
+  font-family: monospace;
+  font-size: 14px;
 }
 
 @media (max-width: 768px) {
