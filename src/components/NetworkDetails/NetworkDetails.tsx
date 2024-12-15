@@ -110,11 +110,6 @@ const NetworkDetails: React.FC<NetworkDetailsProps> = ({ name, description, deta
               Live Peers and Addrbook
             </button>
           )}
-          {serviceData.usefulcommands && (
-            <button className={styles.serviceButton} onClick={() => handleServiceClick('usefulcommands')}>
-              Useful Commands
-            </button>
-          )}
           {serviceData.tools && (
             <button className={styles.serviceButton} onClick={() => handleServiceClick('tools')}>
               Useful Tools
