@@ -1,0 +1,19 @@
+
+{
+  "commands": {
+    "key_management": {
+      "add_new_key": {
+        "description": "Add a new key",
+        "command": "pellcored keys add wallet"
+      },
+      "recover_existing_key": {
+        "description": "Recover an existing key",
+        "command": "pellcored keys add wallet --recover"
+      },
+      "list_all_keys": {
+        "description": "List all keys",
+        "command": "pellcored keys list"
+      }
+    }
+  }
+}

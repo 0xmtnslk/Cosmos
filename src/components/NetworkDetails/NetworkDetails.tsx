@@ -18,8 +18,13 @@ const NetworkDetails: React.FC<NetworkDetailsProps> = ({ name, description }) =>
   useEffect(() => {
     if (selectedService === 'usefulcommands') {
       fetch('/Pasted--commands-key-management-add-new-key-description-Add-a-n-1734297568095.txt')
-        .then(response => response.text())
-        .then(text => {
+        .then(response => {
+          if (!response.ok) {
+            throw new Error('Network response was not ok');
+          }
+          return response.json();
+        })
+        .then(data => {
           try {
             const data = JSON.parse(text);
             setCommands(data);
