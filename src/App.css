@@ -2,6 +2,13 @@
   min-height: 100vh;
   display: flex;
   flex-direction: column;
+  position: relative;
+}
+
+.main {
+  flex: 1;
+  margin-bottom: 0;
+  padding-bottom: 2rem;
 }
 
 .main {
