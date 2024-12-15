@@ -18,12 +18,21 @@ const NetworkDetails: React.FC<NetworkDetailsProps> = ({ name, description }) =>
   useEffect(() => {
     if (selectedService === 'usefulcommands') {
       fetch('/Pasted--key-management-add-new-key-description-Add-a-new-key-comman-1734298136519.txt')
-        .then(response => response.json())
-        .then(data => {
-          setCommands(data);
-          setError(null);
+        .then(response => response.text())
+        .then(text => {
+          try {
+            const jsonData = JSON.parse(text);
+            setCommands(jsonData);
+            setError(null);
+          } catch (err) {
+            console.error('JSON parse error:', err);
+            setError('Failed to parse commands data');
+          }
         })
-        .catch(() => setError('Failed to load commands'));
+        .catch(err => {
+          console.error('Fetch error:', err);
+          setError('Failed to load commands');
+        });
     }
   }, [selectedService]);
 
