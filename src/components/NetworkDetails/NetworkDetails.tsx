@@ -19,16 +19,19 @@ const NetworkDetails: React.FC<NetworkDetailsProps> = ({ name, description, deta
       const networkPath = details.includes('mainnet') ? 'mainnet' : 'testnet';
       const networkName = details.split('/').pop() || '';
       const url = `https://snapshots.coinhunterstr.com/site/${networkPath}/${networkName}/${service}.json`;
-      console.log('Fetching from:', url);
+      console.log('Fetching URL:', url);
       
       const response = await fetch(url);
-      if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+      if (!response.ok) {
+        console.error('Response not ok:', response.status);
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
       
       const data = await response.json();
-      console.log('Received data:', data);
+      console.log('Fetched data:', data);
       setServiceData(data);
-      setSelectedService(service);
     } catch (error) {
+      console.error('Fetch error:', error);
       console.error('Error fetching data:', error);
       console.error(`Error fetching ${service} data:`, error);
       setServiceData(null);
@@ -45,6 +48,7 @@ const NetworkDetails: React.FC<NetworkDetailsProps> = ({ name, description, deta
 
   const handleServiceClick = (service: string) => {
     setSelectedService(service);
+    fetchServiceData(service);
   };
 
   const renderServiceContent = () => {
