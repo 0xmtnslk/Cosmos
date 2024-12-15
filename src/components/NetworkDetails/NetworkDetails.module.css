@@ -10,10 +10,16 @@
 }
 
 .services {
-  display: flex;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
   gap: 1rem;
   margin-bottom: 2rem;
-  flex-wrap: wrap;
+}
+
+@media (max-width: 768px) {
+  .services {
+    grid-template-columns: 1fr;
+  }
 }
 
 .serviceButton {

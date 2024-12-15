@@ -262,7 +262,17 @@ const NetworkDetails: React.FC<NetworkDetailsProps> = ({ name, description }) =>
                         <code>{item.command}</code>
                         <button 
                           className={styles.copyButton}
-                          onClick={() => navigator.clipboard.writeText(item.command)}
+                          onClick={(e) => {
+                            navigator.clipboard.writeText(item.command);
+                            const btn = e.target as HTMLButtonElement;
+                            const originalText = btn.textContent;
+                            btn.textContent = 'Copied!';
+                            btn.style.background = '#4CAF50';
+                            setTimeout(() => {
+                              btn.textContent = originalText;
+                              btn.style.background = 'var(--primary-color)';
+                            }, 1500);
+                          }}
                         >
                           Copy
                         </button>
