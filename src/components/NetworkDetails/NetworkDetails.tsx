@@ -15,6 +15,7 @@ interface ServiceData {
 
 const NetworkDetails: React.FC<NetworkDetailsProps> = ({ name, description, details }) => {
   const [serviceData, setServiceData] = useState<{ [key: string]: ServiceData }>({});
+  const [selectedService, setSelectedService] = useState<string | null>(null);
 
   const fetchServiceData = async (service: string) => {
     try {
@@ -51,6 +52,11 @@ const NetworkDetails: React.FC<NetworkDetailsProps> = ({ name, description, deta
 
     loadAllServices();
   }, [details]);
+
+  const handleServiceClick = (serviceName: string) => {
+    setSelectedService(serviceName);
+  };
+
   return (
     <div className={styles.container}>
       <div className={styles.header}>
@@ -62,36 +68,44 @@ const NetworkDetails: React.FC<NetworkDetailsProps> = ({ name, description, deta
         <h2>Services</h2>
         <div className={styles.buttonGrid}>
           {serviceData.installation && (
-            <button className={styles.serviceButton} onClick={() => window.open(serviceData.installation.content)}>
+            <button className={styles.serviceButton} onClick={() => handleServiceClick('installation')}>
               Installation
             </button>
           )}
           {serviceData.snapshots && (
-            <button className={styles.serviceButton} onClick={() => window.open(serviceData.snapshots.content)}>
+            <button className={styles.serviceButton} onClick={() => handleServiceClick('snapshots')}>
               Snapshots
             </button>
           )}
           {serviceData.upgrade && (
-            <button className={styles.serviceButton} onClick={() => window.open(serviceData.upgrade.content)}>
+            <button className={styles.serviceButton} onClick={() => handleServiceClick('upgrade')}>
               Upgrade
             </button>
           )}
           {serviceData.peers && (
-            <button className={styles.serviceButton} onClick={() => window.open(serviceData.peers.content)}>
+            <button className={styles.serviceButton} onClick={() => handleServiceClick('peers')}>
               Live Peers and Addrbook
             </button>
           )}
           {serviceData.usefulcommands && (
-            <button className={styles.serviceButton} onClick={() => window.open(serviceData.usefulcommands.content)}>
+            <button className={styles.serviceButton} onClick={() => handleServiceClick('usefulcommands')}>
               Useful Commands
             </button>
           )}
           {serviceData.tools && (
-            <button className={styles.serviceButton} onClick={() => window.open(serviceData.tools.content)}>
+            <button className={styles.serviceButton} onClick={() => handleServiceClick('tools')}>
               Useful Tools
             </button>
           )}
         </div>
+        {selectedService && serviceData[selectedService] && (
+          <div className={styles.serviceContent}>
+            <h3>{serviceData[selectedService].title}</h3>
+            <div className={styles.contentBox}>
+              {serviceData[selectedService].content}
+            </div>
+          </div>
+        )}
       </div>
 
       <div className={styles.section}>
