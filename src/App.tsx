@@ -76,8 +76,12 @@ export default function App() {
         <section className="network-section testnet">
           <h2>Testnet</h2>
           <div className="network-content">
+            <h3 className="section-subtitle">Active</h3>
             <div className="node-grid">
-              {nodes.testnet.map((node, index) => (
+              {nodes.testnet
+                .filter(node => node.status === 'ongoing')
+                .sort((a, b) => a.name.localeCompare(b.name))
+                .map((node, index) => (
                 <button
                   key={index}
                   className="node-button"
@@ -90,7 +94,30 @@ export default function App() {
                       <span className="node-description">Click for details</span>
                     </div>
                   </div>
-                  <div className={`status-indicator ${node.status === 'ongoing' ? 'ongoing' : 'finish'}`}></div>
+                  <div className="status-indicator ongoing"></div>
+                </button>
+              ))}
+            </div>
+            
+            <h3 className="section-subtitle">Archive</h3>
+            <div className="node-grid">
+              {nodes.testnet
+                .filter(node => node.status === 'finish')
+                .sort((a, b) => a.name.localeCompare(b.name))
+                .map((node, index) => (
+                <button
+                  key={index}
+                  className="node-button"
+                  onClick={() => handleNodeClick(node.details)}
+                >
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                    {node.pic && <img src={node.pic} alt={node.name} className="node-icon" />}
+                    <div className="node-info">
+                      <span className="node-name">{node.name}</span>
+                      <span className="node-description">Click for details</span>
+                    </div>
+                  </div>
+                  <div className="status-indicator finish"></div>
                 </button>
               ))}
             </div>
