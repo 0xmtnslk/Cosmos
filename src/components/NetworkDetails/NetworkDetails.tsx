@@ -26,16 +26,33 @@ const NetworkDetails: React.FC<NetworkDetailsProps> = ({ name, description, deta
       const url = `https://snapshots.coinhunterstr.com/site/${networkPath}/${networkName}/${service}.json`;
       console.log('Fetching URL:', url);
       
-      const response = await fetch(url);
+      const response = await fetch(url, {
+        method: 'GET',
+        headers: {
+          'Accept': 'application/json',
+          'Content-Type': 'application/json',
+        },
+        mode: 'cors',
+      });
+      
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
+      
+      const contentType = response.headers.get("content-type");
+      if (!contentType || !contentType.includes("application/json")) {
+        throw new Error("API did not return JSON");
+      }
+      
       const data = await response.json();
       console.log('Fetched data:', data);
+      if (!data) {
+        throw new Error("No data received");
+      }
       setServiceData(data);
-    } catch (error) {
-      console.error('Error:', error);
-      setError('Failed to load data. Please try again.');
+    } catch (error: any) {
+      console.error('Fetch error details:', error);
+      setError(`Failed to load data: ${error.message}`);
       setServiceData(null);
     } finally {
       setIsLoading(false);
