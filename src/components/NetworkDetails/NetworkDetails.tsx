@@ -28,11 +28,27 @@ const NetworkDetails: React.FC<NetworkDetailsProps> = ({ name, description }) =>
       </div>
 
       <div className={styles.section}>
-        <h2>Explorer</h2>
-        <div className={styles.buttonGrid}>
-          <button className={styles.serviceButton}>Block Explorer</button>
-          <button className={styles.serviceButton}>Validator Stats</button>
-          <button className={styles.serviceButton}>Network Status</button>
+        <h2>Chain Information</h2>
+        <div className={styles.chainInfo}>
+          <div className={styles.infoGrid}>
+            <div className={styles.infoItem}>
+              <span className={styles.label}>Chain ID:</span>
+              <span className={styles.value}>dymension_1100-1</span>
+            </div>
+            <div className={styles.infoItem}>
+              <span className={styles.label}>Height:</span>
+              <span className={styles.value}>1234567</span>
+            </div>
+            <div className={styles.infoItem}>
+              <span className={styles.label}>Active Validators:</span>
+              <span className={styles.value}>100</span>
+            </div>
+            <div className={styles.infoItem}>
+              <span className={styles.label}>Total Validators:</span>
+              <span className={styles.value}>150</span>
+            </div>
+          </div>
+          <a href="#" className={styles.explorerLink}>View in Explorer →</a>
         </div>
       </div>
     </div>
