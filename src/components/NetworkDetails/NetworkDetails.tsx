@@ -20,10 +20,16 @@ const NetworkDetails: React.FC<NetworkDetailsProps> = ({ name, description, deta
   const fetchServiceData = async (service: string) => {
     try {
       const baseUrl = 'https://snapshots.coinhunterstr.com/site';
-      const response = await fetch(`${baseUrl}${details}/${service}.json`);
+      const networkPath = details.includes('mainnet') ? 'mainnet' : 'testnet';
+      const networkName = details.split('/').pop();
+      const response = await fetch(`${baseUrl}/${networkPath}/${networkName}/${service}.json`);
+      
       if (!response.ok) throw new Error('Network response was not ok');
       const data = await response.json();
-      return data;
+      return {
+        title: service.charAt(0).toUpperCase() + service.slice(1),
+        content: data
+      };
     } catch (error) {
       console.error(`Error fetching ${service} data:`, error);
       return null;
@@ -67,10 +73,27 @@ const NetworkDetails: React.FC<NetworkDetailsProps> = ({ name, description, deta
       <div className={styles.section}>
         <h2>Services</h2>
         <div className={styles.buttonGrid}>
-          {serviceData.installation && (
-            <button className={styles.serviceButton} onClick={() => handleServiceClick('installation')}>
-              Installation
-            </button>
+          {Object.keys(serviceData).length > 0 && (
+            <>
+              <button className={styles.serviceButton} onClick={() => handleServiceClick('installation')}>
+                Installation
+              </button>
+              <button className={styles.serviceButton} onClick={() => handleServiceClick('snapshots')}>
+                Snapshots
+              </button>
+              <button className={styles.serviceButton} onClick={() => handleServiceClick('upgrade')}>
+                Upgrade
+              </button>
+              <button className={styles.serviceButton} onClick={() => handleServiceClick('peers')}>
+                Live Peers and Addrbook
+              </button>
+              <button className={styles.serviceButton} onClick={() => handleServiceClick('usefulcommands')}>
+                Useful Commands
+              </button>
+              <button className={styles.serviceButton} onClick={() => handleServiceClick('tools')}>
+                Useful Tools
+              </button>
+            </>
           )}
           {serviceData.snapshots && (
             <button className={styles.serviceButton} onClick={() => handleServiceClick('snapshots')}>
