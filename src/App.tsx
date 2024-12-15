@@ -70,12 +70,14 @@ export default function App() {
                   className="node-button"
                   onClick={() => handleNodeClick(node.details)}
                 >
-                  {node.pic && <img src={node.pic} alt={node.name} className="node-icon" />}
-                  <div className="node-info">
-                    <span className="node-name">{node.name}</span>
-                    <span className="node-description">Click for details</span>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                    {node.pic && <img src={node.pic} alt={node.name} className="node-icon" />}
+                    <div className="node-info">
+                      <span className="node-name">{node.name}</span>
+                      <span className="node-description">Click for details</span>
+                    </div>
                   </div>
-                  <div className={`status-indicator ${node.status?.toLowerCase() === 'ongoing' ? 'ongoing' : 'finish'}`}></div>
+                  <div className={`status-indicator ${node.status === 'ongoing' ? 'ongoing' : 'finish'}`}></div>
                 </button>
               ))}
             </div>
@@ -92,12 +94,14 @@ export default function App() {
                   className="node-button"
                   onClick={() => handleNodeClick(node.details)}
                 >
-                  {node.pic && <img src={node.pic} alt={node.name} className="node-icon" />}
-                  <div className="node-info">
-                    <span className="node-name">{node.name}</span>
-                    <span className="node-description">Click for details</span>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                    {node.pic && <img src={node.pic} alt={node.name} className="node-icon" />}
+                    <div className="node-info">
+                      <span className="node-name">{node.name}</span>
+                      <span className="node-description">Click for details</span>
+                    </div>
                   </div>
-                  <div className={`status-indicator ${node.status?.toLowerCase() === 'ongoing' ? 'ongoing' : 'finish'}`}></div>
+                  <div className={`status-indicator ${node.status === 'ongoing' ? 'ongoing' : 'finish'}`}></div>
                 </button>
               ))}
             </div>

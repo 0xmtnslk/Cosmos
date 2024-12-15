@@ -4,14 +4,16 @@
     {
       "name": "Sui Node",
       "pic": "https://example.com/sui-logo.png",
-      "details": "https://nodes.coinhunterstr.com/sui"
+      "details": "https://nodes.coinhunterstr.com/sui",
+      "status": "ongoing"
     }
   ],
   "testnet": [
     {
       "name": "Massa Node",
       "pic": "https://example.com/massa-logo.png",
-      "details": "https://nodes.coinhunterstr.com/massa"
+      "details": "https://nodes.coinhunterstr.com/massa",
+      "status": "finish"
     }
   ]
 }
