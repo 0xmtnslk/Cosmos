@@ -1,13 +1,56 @@
 
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import styles from './NetworkDetails.module.css';
 
 interface NetworkDetailsProps {
   name: string;
   description: string;
+  details: string;
 }
 
-const NetworkDetails: React.FC<NetworkDetailsProps> = ({ name, description }) => {
+interface ServiceData {
+  title: string;
+  content: string;
+}
+
+const NetworkDetails: React.FC<NetworkDetailsProps> = ({ name, description, details }) => {
+  const [serviceData, setServiceData] = useState<{ [key: string]: ServiceData }>({});
+
+  const fetchServiceData = async (service: string) => {
+    try {
+      const baseUrl = 'https://snapshots.coinhunterstr.com/site';
+      const response = await fetch(`${baseUrl}${details}/${service}.json`);
+      if (!response.ok) throw new Error('Network response was not ok');
+      const data = await response.json();
+      return data;
+    } catch (error) {
+      console.error(`Error fetching ${service} data:`, error);
+      return null;
+    }
+  };
+
+  useEffect(() => {
+    const services = [
+      'installation',
+      'snapshots',
+      'upgrade',
+      'peers',
+      'usefulcommands',
+      'tools'
+    ];
+
+    const loadAllServices = async () => {
+      const servicePromises = services.map(service => 
+        fetchServiceData(service).then(data => ({ [service]: data }))
+      );
+      
+      const results = await Promise.all(servicePromises);
+      const combinedData = results.reduce((acc, curr) => ({ ...acc, ...curr }), {});
+      setServiceData(combinedData);
+    };
+
+    loadAllServices();
+  }, [details]);
   return (
     <div className={styles.container}>
       <div className={styles.header}>
@@ -18,12 +61,36 @@ const NetworkDetails: React.FC<NetworkDetailsProps> = ({ name, description }) =>
       <div className={styles.section}>
         <h2>Services</h2>
         <div className={styles.buttonGrid}>
-          <button className={styles.serviceButton}>Installation</button>
-          <button className={styles.serviceButton}>Snapshots</button>
-          <button className={styles.serviceButton}>Upgrade</button>
-          <button className={styles.serviceButton}>Live Peers and Addrbook</button>
-          <button className={styles.serviceButton}>Useful Commands</button>
-          <button className={styles.serviceButton}>Useful Tools</button>
+          {serviceData.installation && (
+            <button className={styles.serviceButton} onClick={() => window.open(serviceData.installation.content)}>
+              Installation
+            </button>
+          )}
+          {serviceData.snapshots && (
+            <button className={styles.serviceButton} onClick={() => window.open(serviceData.snapshots.content)}>
+              Snapshots
+            </button>
+          )}
+          {serviceData.upgrade && (
+            <button className={styles.serviceButton} onClick={() => window.open(serviceData.upgrade.content)}>
+              Upgrade
+            </button>
+          )}
+          {serviceData.peers && (
+            <button className={styles.serviceButton} onClick={() => window.open(serviceData.peers.content)}>
+              Live Peers and Addrbook
+            </button>
+          )}
+          {serviceData.usefulcommands && (
+            <button className={styles.serviceButton} onClick={() => window.open(serviceData.usefulcommands.content)}>
+              Useful Commands
+            </button>
+          )}
+          {serviceData.tools && (
+            <button className={styles.serviceButton} onClick={() => window.open(serviceData.tools.content)}>
+              Useful Tools
+            </button>
+          )}
         </div>
       </div>
 
