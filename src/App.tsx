@@ -10,6 +10,7 @@ interface Node {
   pic: string;
   details: string;
   status: string;
+  isNew?: boolean;
 }
 
 interface NodesData {
@@ -94,7 +95,10 @@ export default function App() {
                       <span className="node-description">Click for details</span>
                     </div>
                   </div>
-                  <div className="status-indicator ongoing"></div>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '5px' }}>
+                    {node.isNew && <span className="new-label">New</span>}
+                    <div className="status-indicator ongoing"></div>
+                  </div>
                 </button>
               ))}
             </div>
