@@ -10,10 +10,12 @@ interface NetworkDetailsProps {
 const NetworkDetails: React.FC<NetworkDetailsProps> = ({ name, description }) => {
   return (
     <div className={styles.container}>
-      <h1>{name}</h1>
+      <div className={styles.header}>
+        <h1>{name}</h1>
+      </div>
       <p>{description}</p>
       <div className={styles.tools}>
-        <h2>Tools</h2>
+        <h2>Services</h2>
         <div className={styles.toolGrid}>
           <div className={styles.tool}>
             <h3>Snapshots</h3>
