@@ -21,7 +21,13 @@ export default function App() {
 
   const fetchNodes = async () => {
     try {
-      const response = await fetch('https://snapshots.coinhunterstr.com/network.json');
+      const response = await fetch('https://snapshots.coinhunterstr.com/network.json', {
+        cache: 'no-store',
+        headers: {
+          'Cache-Control': 'no-cache',
+          'Pragma': 'no-cache'
+        }
+      });
       const data = await response.json();
       setNodes(data);
     } catch (error) {
@@ -30,9 +36,25 @@ export default function App() {
   };
 
   useEffect(() => {
+    // Initial fetch
     fetchNodes();
-    const interval = setInterval(fetchNodes, 300000); // 5 minutes
-    return () => clearInterval(interval);
+
+    // Set up polling every 5 minutes
+    const interval = setInterval(fetchNodes, 300000);
+
+    // Add event listener for page visibility changes
+    const handleVisibilityChange = () => {
+      if (document.visibilityState === 'visible') {
+        fetchNodes();
+      }
+    };
+    document.addEventListener('visibilitychange', handleVisibilityChange);
+
+    // Cleanup
+    return () => {
+      clearInterval(interval);
+      document.removeEventListener('visibilitychange', handleVisibilityChange);
+    };
   }, []);
 
   const handleNodeClick = (details: string) => {
