@@ -9,6 +9,7 @@ interface Node {
   name: string;
   pic: string;
   details: string;
+  status: string;
 }
 
 interface NodesData {
@@ -65,6 +66,7 @@ export default function App() {
                       <span className="node-description">Click for details</span>
                     </div>
                   </div>
+                  <div className={`status-indicator ${node.status === 'ongoing' ? 'ongoing' : 'finish'}`}></div>
                 </button>
               ))}
             </div>
@@ -88,6 +90,7 @@ export default function App() {
                       <span className="node-description">Click for details</span>
                     </div>
                   </div>
+                  <div className={`status-indicator ${node.status === 'ongoing' ? 'ongoing' : 'finish'}`}></div>
                 </button>
               ))}
             </div>
