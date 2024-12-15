@@ -22,27 +22,30 @@ export default function App() {
 
   const fetchNodes = async () => {
     try {
-      const response = await fetch('https://snapshots.coinhunterstr.com/network.json');
+      const timestamp = new Date().getTime();
+      const response = await fetch(`https://snapshots.coinhunterstr.com/network.json?t=${timestamp}`, {
+        headers: {
+          'Cache-Control': 'no-cache',
+          'Pragma': 'no-cache'
+        }
+      });
+      
       if (!response.ok) {
         throw new Error('Network response was not ok');
       }
-      const text = await response.text(); // First get the raw text
-      console.log('Raw response:', text); // Log the raw response
-      try {
-        const data = JSON.parse(text); // Then parse it
-        if (data && typeof data === 'object' && 'mainnet' in data && 'testnet' in data) {
-          setNodes(data);
-          console.log('Data loaded:', data);
-        } else {
-          throw new Error('Invalid data structure');
-        }
-      } catch (parseError) {
-        console.error('JSON Parse Error:', parseError);
-        throw parseError;
+      
+      const data = await response.json();
+      if (data && typeof data === 'object') {
+        const formattedData = {
+          mainnet: Array.isArray(data.mainnet) ? data.mainnet : [],
+          testnet: Array.isArray(data.testnet) ? data.testnet : []
+        };
+        setNodes(formattedData);
+        console.log('Data loaded:', formattedData);
       }
     } catch (error) {
       console.error('Error fetching nodes:', error);
-      setNodes({ mainnet: [], testnet: [] }); // Reset to empty state on error
+      setNodes({ mainnet: [], testnet: [] });
     }
   };
 
